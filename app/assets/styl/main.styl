@@ -5,6 +5,7 @@ reset-html5()
 
 // Defaults
 font-main = sans-serif
+width = 1920px
 height = 26px
 
 html, body
@@ -23,23 +24,13 @@ html, body
 	100%
 		transform: scale(1)
 
-#statusline-bg
-	width = 1920px
-	height = height
-	blur = 2px
-
-	position: absolute
-	background: url("/home/kim/bg2.jpg") blur blur
-
-	top: -(blur)
-	left: -(blur)
-
-	width: width + (blur * 2)
-	height: height + (blur * 4)
-	-webkit-filter: blur(blur) //grayscale(100%)
-
-	z-index: 10
-
+background-blur(blur-radius, grayscale, overlay-color, overlay-opacity)
+	background-position: blur-radius blur-radius
+	top: -(blur-radius)
+	left: -(blur-radius)
+	width: @width + (blur-radius * 4)
+	height: @height + (blur-radius * 4)
+	-webkit-filter: blur(blur-radius) grayscale(grayscale)
 	&:after
 		position: absolute
 		top: 0
@@ -47,18 +38,28 @@ html, body
 		width: 100%
 		height: 100%
 		content: ''
-		background: linear-gradient(top, rgba(#000, .4), rgba(#000, .8))
+		background: linear-gradient(top, rgba(overlay-color, overlay-opacity), rgba(overlay-color, overlay-opacity + .4))
+
+#statusline-bg
+	position: absolute
+	width: width
+	height: height
+	z-index: 10
+	background: linear-gradient(top, #333, #111)
+	&.dark-bg
+		background-blur(4px, 0, #000, .2)
+	&.medium-bg
+		background-blur(4px, 100%, #000, .4)
 
 #statusline
 	position: relative
 	z-index: 11
+	width: width
+	height: height
 
 	height: height - 1px
 	line-height: height
-	//background: linear-gradient(top, #444, #222)
 	color: #fff
-
-	border-bottom: 1px solid rgba(#000, .5)
 
 	div, ul, li
 		display: inline-block

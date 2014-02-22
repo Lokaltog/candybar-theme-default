@@ -43,6 +43,12 @@ wkHandlers = {
 	reload: function () {
 		window.location.reload()
 	},
+	setBackground: function ($scope, data) {
+		document.getElementById('statusline-bg').className = data.cls
+		if ('image' in data) {
+			document.getElementById('statusline-bg').style['background-image'] = 'url(' + data.image + ')'
+		}
+	},
 }
 
 angular.module('Wkline', [])
