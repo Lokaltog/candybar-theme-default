@@ -28,6 +28,18 @@ wkHandlers = {
 	inject: function ($scope, data) {
 		$scope.data = merge_recursive($scope.data, data)
 	},
+	notification: function ($scope, data) {
+		var icons = {
+			warning: 'fa-exclamation-triangle',
+			error: 'fa-times-circle',
+		}
+		$scope.data.plugin.notifications = [{
+			class: data.category,
+			icon: data.category in icons ? 'fa icon ' + icons[data.category] : '',
+			summary: data.summary,
+			body: data.body,
+		}]
+	},
 	reload: function () {
 		window.location.reload()
 	},
@@ -35,7 +47,7 @@ wkHandlers = {
 
 angular.module('Wkline', [])
 	.controller('WklineCtrl', ['$scope', function ($scope) {
-		$scope.data = {}
+		$scope.data = {plugin: {}}
 		wkInject = function (payload) {
 			if (! payload) {
 				return

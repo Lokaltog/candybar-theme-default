@@ -23,15 +23,13 @@ html(ng-app='Wkline')
 
 
 			#right
-				ul#notification
-					li.warn
-						i.fa.fa-exclamation-triangle.icon
-						| Warning notification
-						i.fa.fa-times.close
-					li.error
-						i.fa.fa-times-circle.icon
-						| Error notification
-						i.fa.fa-times.close
+				ul#notification(ng-show='data.plugin.notifications')
+					li(ng-repeat='n in data.plugin.notifications', ng-class='n.class')
+						i(ng-class='n.icon')
+						.content
+							span.summary(ng-bind='n.summary')
+							span.body(ng-bind='n.body')
+							i.fa.fa-times.close
 
 				#player
 					i.fa.fa-fast-backward
