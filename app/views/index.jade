@@ -44,6 +44,10 @@ html(ng-app='Wkline')
 						span.artist Artist
 						span.title Very long trimmed title
 
+				#weather
+					img.icon(ng-src='static/img/weather/{{data.plugin.weather.icon}}.svg')
+					span.temp(ng-class='data.plugin.weather.unit', ng-bind='data.plugin.weather.temp') 0
+
 				#volume
 					i.fa.fa-volume-down
 					.progress
