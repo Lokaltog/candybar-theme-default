@@ -17,6 +17,12 @@ html(ng-app='Wkline')
 					li.tag(ng-repeat='t in widget.tags', ng-class='{selected: t.selected, urgent: t.urgent, "has-windows": t.hasWindows}')
 						span.name(ng-bind='t.name')
 
+				.widget#layout(ng-show='widget.layout')
+					.name(ng-bind='widget.layout.name')
+
+				.widget#window(ng-show='widget.window')
+					.name(ng-bind='widget.window.name')
+
 			#right
 				ul.widget#notification(ng-show='widget.notifications')
 					li(ng-repeat='(i, n) in widget.notifications', ng-class='n.class', ng-click='widget.notifications.splice(i, 1)')

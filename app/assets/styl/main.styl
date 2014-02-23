@@ -147,6 +147,13 @@ background-blur(blur-radius, grayscale, overlay-color, overlay-opacity)
 					&:after
 						background: linear-gradient(45deg, transparent, transparent, rgba(#000, .5) 50%, rgba(#000, .7))
 
+	#window
+		max-width = width / 4
+		max-width: max-width
+		overflow: hidden
+		text-overflow: clip
+		-webkit-mask-image: -webkit-linear-gradient(left, rgba(#000, 1), rgba(#000, 1) max-width - 50px, rgba(#000, 0) max-width)
+
 	#date
 		color: #eee
 
@@ -234,7 +241,7 @@ background-blur(blur-radius, grayscale, overlay-color, overlay-opacity)
 				&:before
 					content: ' / '
 		.song
-			width = 200px
+			width = 300px
 			margin: 0 10px
 			max-width: width
 			height: height
