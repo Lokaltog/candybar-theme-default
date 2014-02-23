@@ -3,10 +3,25 @@
 global-reset()
 reset-html5()
 
-// Defaults
+// Global settings
 font-main = sans-serif
 width = 1920px
 height = 26px
+progress-size = 50px
+
+@keyframes bubble
+	0%
+		transform: scale(0)
+	50%
+		transform: scale(2)
+	100%
+		transform: scale(1)
+
+@keyframes bg-move
+	0%
+		background-position: 0 0
+	100%
+		background-position: progress-size progress-size
 
 html, body
 	font: 14px font-main
@@ -16,13 +31,8 @@ html, body
 	text-shadow: 0 1px 0 rgba(#000, .8)
 	overflow: hidden
 
-@keyframes bubble
-	0%
-		transform: scale(0)
-	50%
-		transform: scale(2)
-	100%
-		transform: scale(1)
+[ng-cloak]
+	display: none !important
 
 background-blur(blur-radius, grayscale, overlay-color, overlay-opacity)
 	background-position: blur-radius blur-radius
@@ -40,10 +50,25 @@ background-blur(blur-radius, grayscale, overlay-color, overlay-opacity)
 		content: ''
 		background: linear-gradient(top, rgba(overlay-color, overlay-opacity), rgba(overlay-color, overlay-opacity + .4))
 
+#statusline-loading
+	width: width - 20px
+	height: (height / 2)
+	position: absolute
+	top: (height / 4)
+	left: 10px
+	content: ''
+	z-index: 100
+	background: rgba(#fff, .1) linear-gradient(-45deg, rgba(#fff, .1) 25%, transparent 25%, transparent 50%, rgba(#fff, .1) 50%, rgba(#fff, .1) 75%, transparent 75%, transparent)
+	background-size: progress-size progress-size
+	border-radius: (height / 2)
+	animation: bg-move 2s linear infinite
+
 #statusline-bg
 	position: absolute
 	width: width
 	height: height
+	top: 0
+	left: 0
 	z-index: 10
 	background: linear-gradient(top, #333, #111)
 	&.dark-bg
@@ -54,14 +79,14 @@ background-blur(blur-radius, grayscale, overlay-color, overlay-opacity)
 #statusline
 	position: relative
 	z-index: 11
-	width: width
+	width: 100%
 	height: height
 
 	height: height - 1px
 	line-height: height
 	color: #fff
 
-	div, ul, li
+	.widget, div, ul, li
 		display: inline-block
 		vertical-align: top
 		white-space: nowrap
@@ -89,30 +114,39 @@ background-blur(blur-radius, grayscale, overlay-color, overlay-opacity)
 	#tags
 		li
 			padding: 0 10px
-			line-height: height - 2px
-			margin: 1px
-			border-radius: 3px
 			cursor: pointer
 			position: relative
-
+			height: height
+			line-height: height
+			color: rgba(#fff, .9)
+			text-shadow: 0 -1px 1px rgba(#000, 1)
 			&:hover
-				background: rgba(#fff, .1)
-
-			&.selected
-				background: rgba(#fff, .2)
+				border-width = 2px
+				background: linear-gradient(top, transparent, transparent (height - border-width), rgba(#fff, .5) (height - border-width), rgba(#fff, .6))
+				color: #fff
+			&.urgent
+				background: rgba(#f30, .6)
 				color: #fff
 				text-shadow: 0 -1px 0 #000
 				font-weight: bold
+			&.has-windows
+				&:after
+					position: absolute
+					content: ''
+					width: 5px
+					height: 5px
+					top: 1px
+					right: 1px
+					background: linear-gradient(45deg, transparent, transparent, rgba(#fff, .5) 50%, rgba(#fff, .7))
+			&.selected
+				background: linear-gradient(top, rgba(#fff, .9), rgba(#fff, .7))
+				color: rgba(#000, .9)
+				text-shadow: 0 1px 0 rgba(#fff, .7)
+				font-weight: bold
+				&.has-windows
+					&:after
+						background: linear-gradient(45deg, transparent, transparent, rgba(#000, .5) 50%, rgba(#000, .7))
 
-			.windows
-				position: absolute
-				content: ' '
-				width: 4px
-				height: 4px
-				border-radius: 1px
-				background: rgba(#fff, .5)
-				top: 2px
-				right: 2px
 	#date
 		color: #eee
 

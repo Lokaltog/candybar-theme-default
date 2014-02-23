@@ -26,14 +26,14 @@ merge_recursive = function (obj1, obj2) {
 
 wkHandlers = {
 	inject: function ($scope, data) {
-		$scope.data = merge_recursive($scope.data, data)
+		$scope.widget = merge_recursive($scope.widget, data)
 	},
 	notification: function ($scope, data) {
 		var icons = {
 			warning: 'fa-exclamation-triangle',
 			error: 'fa-times-circle',
 		}
-		$scope.data.plugin.notifications = [{
+		$scope.widget.notifications = [{
 			class: data.category,
 			icon: data.category in icons ? 'fa icon ' + icons[data.category] : '',
 			summary: data.summary,
@@ -53,7 +53,7 @@ wkHandlers = {
 
 angular.module('Wkline', [])
 	.controller('WklineCtrl', ['$scope', function ($scope) {
-		$scope.data = {plugin: {}}
+		$scope.widget = {}
 		wkInject = function (payload) {
 			if (! payload) {
 				return

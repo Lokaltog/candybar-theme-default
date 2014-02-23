@@ -11,53 +11,51 @@ html(ng-app='Wkline')
 		link(rel='stylesheet', href='static/css/main.css', type='text/css')
 
 	body
-		#statusline-bg
-		#statusline(ng-controller='WklineCtrl')
+		#statusline(ng-cloak, ng-controller='WklineCtrl')
 			#left
-				ul#tags
-					li 1
-					li.selected 2
-					li
-						| 3
-						span.windows
-
+				ul.widget#tags(ng-show='widget.tags')
+					li.tag(ng-repeat='t in widget.tags', ng-class='{selected: t.selected, urgent: t.urgent, "has-windows": t.hasWindows}')
+						span.name(ng-bind='t.name')
 
 			#right
-				ul#notification(ng-show='data.plugin.notifications')
-					li(ng-repeat='n in data.plugin.notifications', ng-class='n.class')
+				ul.widget#notification(ng-show='widget.notifications')
+					li(ng-repeat='(i, n) in widget.notifications', ng-class='n.class', ng-click='widget.notifications.splice(i, 1)')
 						i(ng-class='n.icon')
 						.content
 							span.summary(ng-bind='n.summary')
 							span.body(ng-bind='n.body')
-							i.fa.fa-times.close
 
-				#player
-					i.fa.fa-fast-backward
-					i.fa.fa-pause
-					i.fa.fa-fast-forward
+				.widget#player(ng-show='widget.music')
 					.time
-						span.current(ng-bind='data.plugin.music.time_current')
-						span.total(ng-bind='data.plugin.music.time_total')
+						span.current(ng-bind='widget.music.time_current')
+						span.total(ng-bind='widget.music.time_total')
 					.progress
-						.bar(ng-style='{width: data.plugin.music.time_percent + "%"}')
+						.bar(ng-style='{width: widget.music.time_percent + "%"}')
 					.song
-						span.artist(ng-bind='data.plugin.music.artist')
-						span.title(ng-bind='data.plugin.music.title')
+						span.artist(ng-bind='widget.music.artist')
+						span.title(ng-bind='widget.music.title')
 
-				#weather
-					img.icon(ng-src='static/img/weather/{{data.plugin.weather.icon}}.svg')
-					span.temp(ng-class='data.plugin.weather.unit', ng-bind='data.plugin.weather.temp') 0
+				.widget#weather(ng-show='widget.weather')
+					img.icon(ng-src='static/img/weather/{{widget.weather.icon || "na"}}.svg')
+					span.temp(ng-class='widget.weather.unit', ng-bind='widget.weather.temp') 0
 
-				#volume
-					i.fa.fa-volume-down
+				.widget#volume(ng-show='widget.volume')
+					i.fa.fa-volume-off(ng-if='widget.volume <= 10')
+					i.fa.fa-volume-down(ng-if='widget.volume >= 11 && widget.volume <= 75')
+					i.fa.fa-volume-up(ng-if='widget.volume >= 76')
 					.progress
-						.bar(style='width:50%')
-				#date
+						.bar(ng-style='{width: widget.volume + "%"}')
+
+				.widget#date(ng-show='widget.date')
 					i.fa.fa-calendar
-					span(ng-bind='data.plugin.date') 0000-00-00
-				#time
+					span(ng-bind='widget.date')
+
+				.widget#time(ng-show='widget.time')
 					i.fa.fa-clock-o
-					span(ng-bind='data.plugin.time') 00:00
+					span(ng-bind='widget.time')
+
+		#statusline-bg
+		#statusline-loading(ng-hide='1')
 
 	script(src='http://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js')
 	script(src='static/js/main.js')
