@@ -23,6 +23,17 @@ progress-size = 50px
 	100%
 		background-position: progress-size progress-size
 
+@keyframes urgent-pulse
+	0%
+		background: rgba(#f30, .6)
+		text-shadow: 0 0 10px #f30, 0 0 5px #f30, 0 0 5px #f30, 0 0 2px #fff
+	40%
+		background: rgba(#f30, .4)
+		text-shadow: 0 -1px 0 #000
+	80%, 100%
+		background: rgba(#f30, .6)
+		text-shadow: 0 0 10px #f30, 0 0 5px #f30, 0 0 5px #f30, 0 0 2px #fff
+
 html, body
 	font: 14px font-main
 	background: #000
@@ -122,12 +133,11 @@ background-blur(blur-radius, grayscale, overlay-color, overlay-opacity)
 			text-shadow: 0 -1px 1px rgba(#000, 1)
 			&:hover
 				border-width = 2px
-				background: linear-gradient(top, transparent, transparent (height - border-width), rgba(#fff, .5) (height - border-width), rgba(#fff, .6))
+				background: linear-gradient(bottom, transparent, transparent (height - border-width), rgba(#fff, .5) (height - border-width), rgba(#fff, .6))
 				color: #fff
 			&.urgent
-				background: rgba(#f30, .6)
+				animation: urgent-pulse 1.5s linear infinite
 				color: #fff
-				text-shadow: 0 -1px 0 #000
 				font-weight: bold
 			&.has-windows
 				&:after
