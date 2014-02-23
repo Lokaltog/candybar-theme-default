@@ -36,13 +36,13 @@ html(ng-app='Wkline')
 					i.fa.fa-pause
 					i.fa.fa-fast-forward
 					.time
-						span.current 2:20
-						span.end 4:40
+						span.current(ng-bind='data.plugin.music.time_current')
+						span.total(ng-bind='data.plugin.music.time_total')
 					.progress
-						.bar(style='width:50%')
+						.bar(ng-style='{width: data.plugin.music.time_percent + "%"}')
 					.song
-						span.artist Artist
-						span.title Very long trimmed title
+						span.artist(ng-bind='data.plugin.music.artist')
+						span.title(ng-bind='data.plugin.music.title')
 
 				#weather
 					img.icon(ng-src='static/img/weather/{{data.plugin.weather.icon}}.svg')
