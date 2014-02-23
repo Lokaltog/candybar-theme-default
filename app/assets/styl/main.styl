@@ -8,6 +8,7 @@ font-main = sans-serif
 width = 1920px
 height = 26px
 progress-size = 50px
+urgent-color = #f30
 
 @keyframes bubble
 	0%
@@ -25,14 +26,14 @@ progress-size = 50px
 
 @keyframes urgent-pulse
 	0%
-		background: rgba(#f30, .6)
-		text-shadow: 0 0 10px #f30, 0 0 5px #f30, 0 0 5px #f30, 0 0 2px #fff
+		background: darken(urgent-color, 20)
+		text-shadow: 0 0 10px urgent-color, 0 0 5px urgent-color, 0 0 5px urgent-color, 0 0 2px #fff
 	40%
-		background: rgba(#f30, .4)
-		text-shadow: 0 -1px 0 #000
+		background: darken(urgent-color, 30)
+		text-shadow: none
 	80%, 100%
-		background: rgba(#f30, .6)
-		text-shadow: 0 0 10px #f30, 0 0 5px #f30, 0 0 5px #f30, 0 0 2px #fff
+		background: darken(urgent-color, 20)
+		text-shadow: 0 0 10px urgent-color, 0 0 5px urgent-color, 0 0 5px urgent-color, 0 0 2px #fff
 
 html, body
 	font: 14px font-main
@@ -90,10 +91,8 @@ background-blur(blur-radius, grayscale, overlay-color, overlay-opacity)
 #statusline
 	position: relative
 	z-index: 11
-	width: 100%
+	width: width
 	height: height
-
-	height: height - 1px
 	line-height: height
 	color: #fff
 
