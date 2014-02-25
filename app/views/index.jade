@@ -52,13 +52,13 @@ html(ng-app='Wkline')
 					.progress
 						.bar(ng-style='{width: widget.volume + "%"}')
 
-				.widget#date(ng-show='widget.date')
+				.widget#date(ng-show='widget.datetime')
 					i.fa.fa-calendar
-					span(ng-bind='widget.date')
+					span(ng-bind='widget.datetime.date')
 
-				.widget#time(ng-show='widget.time')
+				.widget#time(ng-show='widget.datetime')
 					i.fa.fa-clock-o
-					span(ng-bind='widget.time')
+					span(ng-bind='widget.datetime.time')
 
 		#statusline-bg
 		#statusline-loading(ng-hide='1')
