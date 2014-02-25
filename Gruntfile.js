@@ -1,6 +1,5 @@
 module.exports = function (grunt) {
-	var matchdep = require('matchdep'),
-	    commonTasks
+	var matchdep = require('matchdep')
 
 	matchdep.filter('grunt-*').forEach(grunt.loadNpmTasks)
 
@@ -13,20 +12,50 @@ module.exports = function (grunt) {
 				'webroot/views',
 			],
 		},
-		compress: {
+		sync: {
+			all: {
+				files: [{
+					cwd: 'app/assets',
+					src: '{font,img,etc}/**',
+					dest: 'webroot/static/',
+				}],
+			},
+		},
+		stylus: {
 			all: {
 				options: {
-					mode: 'gzip',
+					debug: false,
+					compress: true,
+					'include css': true,
+					use: [
+						require('nib'),
+					],
+					'import': [
+						'nib',
+					],
+				},
+				files: [{
+					'webroot/static/css/main.css': [
+						'app/assets/styl/main.styl',
+					],
+				}],
+			},
+		},
+		jade: {
+			all: {
+				options: {
+					pretty: false,
+					data: {
+						__min: '.min',
+						__debug: false,
+					},
 				},
 				files: [{
 					expand: true,
-					cwd: 'webroot',
-					src: [
-						'static/js/**/*.js',
-						'static/css/**/*.css',
-						'views/**/*.html',
-					],
-					dest: 'webroot',
+					cwd: 'app/views',
+					src: '**/*.jade',
+					dest: 'webroot/',
+					ext: '.html',
 				}],
 			},
 		},
@@ -58,148 +87,30 @@ module.exports = function (grunt) {
 				}],
 			},
 		},
-		imagemin: {
+		uglify: {
 			all: {
-				options: {
-					optimizationLevel: 3,
-					progressive: true,
-				},
-				files: [{
-					expand: true,
-					cwd: 'webroot/static/img',
-					src: '**/*.{png,jpg}',
-					dest: 'webroot/static/img',
-				}],
-			},
-		},
-		jade: {
-			development: {
-				options: {
-					pretty: true,
-					data: {
-						__min: '',
-						__debug: true,
-					},
-				},
-				files: [{
-					expand: true,
-					cwd: 'app/views',
-					src: '**/*.jade',
-					dest: 'webroot/views/',
-					ext: '.html',
-				}],
-			},
-			production: {
-				options: {
-					pretty: false,
-					data: {
-						__min: '.min',
-						__debug: false,
-					},
-				},
-				files: [{
-					expand: true,
-					cwd: 'app/views',
-					src: '**/*.jade',
-					dest: 'webroot/',
-					ext: '.html',
-				}],
-			},
-		},
-		stylus: {
-			development: {
-				options: {
-					debug: true,
-					compress: false,
-					'include css': true,
-					use: [
-						require('nib'),
-					],
-					'import': [
-						'nib',
-					],
-				},
-				files: [{
-					'webroot/static/css/main.css': [
-						'app/assets/styl/main.styl',
-					],
-				}],
-			},
-			production: {
-				options: {
-					debug: false,
-					compress: true,
-					'include css': true,
-					use: [
-						require('nib'),
-					],
-					'import': [
-						'nib',
-					],
-				},
-				files: [{
-					'webroot/static/css/main.css': [
-						'app/assets/styl/main.styl',
-					],
-				}],
-			},
-		},
-		watch: {
-			options: {
-				spawn: false,
-				atBegin: true,
-			},
-			stylus: {
-				files: ['app/assets/styl/**/*.styl'],
-				tasks: ['stylus:production'],
-			},
-			jade: {
-				files: ['app/views/**/*.jade'],
-				tasks: ['jade:production'],
-			},
-			livereload: {
-				files: ['webroot/static/css/**/*.css'],
-				tasks: [],
-				options: {
-					livereload: true,
+				files: {
+					'webroot/static/js/main.js': ['app/assets/js/lib/angular.min.js', 'app/assets/js/main.js'],
 				},
 			},
 		},
-		concurrent: {
-			options: {
-				logConcurrentOutput: true,
-			},
-			all: [
-				'watch',
-			],
-		},
-		sync: {
+		smoosher: {
 			all: {
-				files: [{
-					cwd: 'app/assets',
-					src: '{js,font,img,etc}/**',
-					dest: 'webroot/static/',
-				}],
+				files: {
+					'webroot/index.html': 'webroot/index.html',
+				},
 			},
 		},
 	})
 
-	commonTasks = [
+	grunt.registerTask('default', [
 		'clean',
 		'sync',
-	]
-
-	grunt.registerTask('production', commonTasks.concat([
 		'stylus',
 		'jade',
-
-		// production only:
 		'cssmin',
-		'imagemin',
 		'htmlmin',
-		'compress',
-	]))
-	grunt.registerTask('development', commonTasks.concat([
-		'concurrent',
-	]))
+		'uglify',
+		'smoosher',
+	])
 }

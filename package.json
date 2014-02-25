@@ -1,12 +1,12 @@
 {
-	"name": "wkline",
+	"name": "wkline-theme-default",
 	"version": "0.0.1a1",
 	"private": true,
 	"author": "Kim Silkebækken <kim.silkebaekken@gmail.com>",
 	"description": "WebKit-based status line for tiling window managers.",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Lokaltog/wkline.git"
+		"url": "https://github.com/Lokaltog/wkline-theme-default"
 	},
 	"dependencies" : {
 		"jade": "*",
@@ -15,16 +15,13 @@
 		"uglify-js": "*",
 
 		"grunt": "*",
-		"grunt-concurrent": "*",
 		"grunt-contrib-clean": "*",
-		"grunt-contrib-compress": "*",
 		"grunt-contrib-cssmin": "*",
 		"grunt-contrib-htmlmin": "*",
-		"grunt-contrib-imagemin": "*",
 		"grunt-contrib-jade": "*",
 		"grunt-contrib-stylus": "*",
-		"grunt-contrib-watch": "*",
-		"grunt-nodemon": "*",
+		"grunt-contrib-uglify": "*",
+		"grunt-html-smoosher": "*",
 		"grunt-sync": "*",
 		"matchdep": "*"
 	},
