@@ -25,29 +25,11 @@ merge_recursive = function (obj1, obj2) {
 }
 
 wkHandlers = {
-	inject: function ($scope, data) {
-		$scope.widget = merge_recursive($scope.widget, data)
-	},
-	notification: function ($scope, data) {
-		var icons = {
-			warning: 'fa-exclamation-triangle',
-			error: 'fa-times-circle',
+	widget: function ($scope, data) {
+		if (! $scope.widget.hasOwnProperty(data._widget)) {
+			$scope.widget[data._widget] = {}
 		}
-		$scope.widget.notifications = [{
-			class: data.category,
-			icon: data.category in icons ? 'fa icon ' + icons[data.category] : '',
-			summary: data.summary,
-			body: data.body,
-		}]
-	},
-	reload: function () {
-		window.location.reload()
-	},
-	setBackground: function ($scope, data) {
-		document.getElementById('statusline-bg').className = data.cls
-		if ('image' in data) {
-			document.getElementById('statusline-bg').style['background-image'] = 'url(' + data.image + ')'
-		}
+		$scope.widget[data._widget] = merge_recursive($scope.widget[data._widget], data)
 	},
 }
 
@@ -56,23 +38,29 @@ angular.module('Wkline', [])
 		$scope.widget = {}
 		wkInject = function (payload) {
 			if (! payload) {
-				return
+				return false
 			}
 
 			$scope.$apply(function () {
-				var handler, data
+				var handler
 
-				if (payload instanceof Array) {
-					handler = payload[0]
-					data = payload[1]
+				if (payload.hasOwnProperty('widget')) {
+					handler = 'widget'
+					payload.data._widget = payload.widget
 				}
-				else {
-					handler = 'inject'
-					data = payload
+				if (payload.hasOwnProperty('init')) {
+					handler = 'init'
+				}
+				if (payload.hasOwnProperty('action')) {
+					handler = 'action'
+				}
+
+				if (! handler || ! wkHandlers.hasOwnProperty(handler)) {
+					return false
 				}
 
 				try {
-					wkHandlers[handler]($scope, data)
+					wkHandlers[handler]($scope, payload.data)
 				}
 				catch (e) {}
 			})

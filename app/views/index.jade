@@ -13,15 +13,15 @@ html(ng-app='Wkline')
 	body
 		#statusline(ng-cloak, ng-controller='WklineCtrl')
 			#left
-				ul.widget#tags(ng-show='widget.tags')
-					li.tag(ng-repeat='t in widget.tags', ng-class='{selected: t.selected, urgent: t.urgent, "has-windows": t.hasWindows}')
-						span.name(ng-bind='t.name')
+				ul.widget#tags(ng-show='widget.desktop')
+					li.tag(ng-repeat='(idx, d) in widget.desktop.desktops', ng-class='{selected: (idx == widget.desktop.current_desktop), urgent: false, "has-windows": d.clients_len > 0}')
+						span.name(ng-bind='idx + 1')
 
 				.widget#layout(ng-show='widget.layout')
 					.name(ng-bind='widget.layout.name')
 
-				.widget#window(ng-show='widget.window')
-					.name(ng-bind='widget.window.name')
+				.widget#window(ng-show='widget.desktop.current_window')
+					.name(ng-bind='widget.desktop.current_window')
 
 			#right
 				ul.widget#notification(ng-show='widget.notifications')
