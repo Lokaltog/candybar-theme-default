@@ -14,7 +14,7 @@ html(ng-app='Wkline')
 		#statusline(ng-cloak, ng-controller='WklineCtrl')
 			#left
 				ul.widget#tags(ng-show='widget.desktop')
-					li.tag(ng-repeat='(idx, d) in widget.desktop.desktops', ng-class='{selected: (idx == widget.desktop.current_desktop), urgent: false, "has-windows": d.clients_len > 0}')
+					li.tag(ng-repeat='(idx, d) in widget.desktop.desktops', ng-class='{selected: (idx == widget.desktop.current_desktop), urgent: d.is_urgent, "has-windows": d.clients_len > 0}')
 						span.name(ng-bind='idx + 1')
 
 				.widget#layout(ng-show='widget.layout')
