@@ -72,7 +72,7 @@ wkFilters = {
 
 angular.module('Wkline', [])
 	.controller('WklineCtrl', ['$scope', function ($scope) {
-		$scope.widget = {};
+		$scope.widget = {}
 
 		var updateDatetimeWidget = function () {
 			var now = new Date()

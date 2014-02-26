@@ -33,11 +33,11 @@ html(ng-app='Wkline')
 
 				.widget#player(ng-show='widget.now_playing.title')
 					i.fa.fa-music
-					.time
-						span.current(ng-bind='widget.now_playing.position')
-						span.total(ng-bind='widget.now_playing.duration')
-					.progress
-						.bar(ng-style='{width: widget.now_playing.position_percent + "%"}')
+					.time(ng-show='widget.now_playing.elapsed_time')
+						span.current(ng-bind='widget.now_playing.elapsed_time')
+						span.total(ng-bind='widget.now_playing.total_time')
+					.progress(ng-show='widget.now_playing.elapsed_percent')
+						.bar(ng-style='{width: widget.now_playing.elapsed_percent + "%"}')
 					i.fa.fa-play(ng-show='widget.now_playing.playing')
 					i.fa.fa-pause(ng-show='! widget.now_playing.playing')
 					.song
