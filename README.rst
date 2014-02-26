@@ -14,3 +14,7 @@ The theme is also available at
 ``http://lokaltog.github.io/wkline-theme-default/``. This address is currently set as
 the default theme in ``config.h``, so compiling this theme isn't necessary unless you
 want offline support or if you want to save bandwidth.
+
+-----
+
+`Plain Weather Icons by merlinthered <http://merlinthered.deviantart.com/art/plain-weather-icons-157162192>`_
