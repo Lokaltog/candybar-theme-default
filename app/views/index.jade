@@ -46,11 +46,11 @@ html(ng-app='Wkline')
 					span.temp(ng-class='widget.weather.unit', ng-bind='widget.weather.temp') 0
 
 				.widget#volume(ng-show='widget.volume')
-					i.fa.fa-volume-off(ng-if='widget.volume <= 10')
-					i.fa.fa-volume-down(ng-if='widget.volume >= 11 && widget.volume <= 75')
-					i.fa.fa-volume-up(ng-if='widget.volume >= 76')
+					i.fa.fa-volume-off(ng-if='widget.volume.volume_percent <= 10')
+					i.fa.fa-volume-down(ng-if='widget.volume.volume_percent >= 11 && widget.volume.volume_percent <= 75')
+					i.fa.fa-volume-up(ng-if='widget.volume.volume_percent >= 76')
 					.progress
-						.bar(ng-style='{width: widget.volume + "%"}')
+						.bar(ng-style='{width: widget.volume.volume_percent + "%"}')
 
 				.widget#date(ng-show='widget.datetime')
 					i.fa.fa-calendar
