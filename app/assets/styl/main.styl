@@ -117,9 +117,22 @@ background-blur(blur-radius, grayscale, overlay-color, overlay-opacity)
 
 	#right
 		float: right
-		& > div:not(:last-child),
-		& > ul:not(:last-child)
-			margin: 0 20px 0 0
+		.widget
+			position: relative
+			margin: 0 0 0 10px
+			padding: 0 0 0 10px
+			border-left: 1px solid rgba(#fff, .1)
+			&:before
+				display: inline-block
+				height: height
+				width: 1px
+				background: rgba(#000, .8)
+				content: ''
+				position: absolute
+				left: -2px
+				top: 0
+			&:last-child
+				margin-right: 10px
 
 	#tags
 		li
