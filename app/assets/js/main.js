@@ -2,6 +2,7 @@
 // available for data injection into the controller scope
 var wkInject,
     wkHandlers,
+    wkFilters,
     merge_recursive,
     pad
 
@@ -37,6 +38,35 @@ wkHandlers = {
 			$scope.widget[data._widget] = {}
 		}
 		$scope.widget[data._widget] = merge_recursive($scope.widget[data._widget], data)
+	},
+}
+
+wkFilters = {
+	now_playing: function (data) {
+		var elapsedMinutes = Math.floor(data.elapsed_sec / 60),
+		    elapsedSeconds = data.elapsed_sec % 60,
+		    totalMinutes = Math.floor(data.total_sec / 60),
+		    totalSeconds = data.total_sec % 60
+
+		data.elapsed_time = elapsedMinutes + ':' + pad(elapsedSeconds, 2)
+		data.total_time = totalMinutes + ':' + pad(totalSeconds, 2)
+		data.elapsed_percent = data.elapsed_sec / data.total_sec * 100
+
+		return data
+	},
+	weather: function (data) {
+		var tempConversions = {
+			'c': function (temp) { return temp },
+			'f': function (temp) { return (temp * 9 / 5) + 32 },
+			'k': function (temp) { return temp + 273.15 },
+		}
+
+		if (! tempConversions.hasOwnProperty(data.unit)) {
+			data = {}
+		}
+		data.temp = tempConversions[data.unit](data.temp)
+
+		return data
 	},
 }
 
@@ -83,6 +113,10 @@ angular.module('Wkline', [])
 				}
 
 				try {
+					if (wkFilters.hasOwnProperty(payload.data._widget)) {
+						// pass through filter
+						payload.data = wkFilters[payload.data._widget](payload.data)
+					}
 					wkHandlers[handler]($scope, payload.data)
 				}
 				catch (e) {}
