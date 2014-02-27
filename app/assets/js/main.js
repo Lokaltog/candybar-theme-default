@@ -6,16 +6,13 @@ widget_datetime = function (config) {
 		interval: 1000,
 		showSeconds: true,
 	}, config)
-	this.containers = {
-		date: $('#date'),
-		time: $('#time'),
-	}
+	this.container = $('#datetime')
 	this.fields = {
-		date: $('.date', this.containers.date),
-		time: $('.time', this.containers.time),
+		date: $('.date', this.container),
+		time: $('.time', this.container),
 	}
 	this.init = function () {
-		show(this.containers.date, this.containers.time)
+		show(this.container)
 		setInterval(this.update.bind(this), this.config.interval)
 		this.update()
 	}

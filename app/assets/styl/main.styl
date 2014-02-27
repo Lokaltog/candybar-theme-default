@@ -61,7 +61,8 @@ html, body
 	height: height
 	line-height: height
 	text-shadow: none !important
-	width: height - 4px
+	width: height
+	vertical-align: middle
 	-webkit-background-clip: text
 	-webkit-text-fill-color: transparent
 
@@ -84,11 +85,13 @@ background-blur(blur-radius, grayscale, overlay-color, overlay-opacity)
 #statusline-bg
 	position: absolute
 	width: width
-	height: height
+	height: height - 2px
 	top: 0
 	left: 0
 	z-index: 10
-	background: #000 linear-gradient(top, rgba(#333, .8), rgba(#000, .8))
+	background: #000 linear-gradient(top, rgba(#333, .8), rgba(#111, .8))
+	border-top: 1px solid rgba(#fff, .2)
+	border-bottom: 1px solid rgba(#000, .8)
 	&.dark-bg
 		background-blur(4px, 0, #000, .2)
 	&.medium-bg
@@ -99,12 +102,12 @@ background-blur(blur-radius, grayscale, overlay-color, overlay-opacity)
 	z-index: 11
 	width: width
 	height: height
-	line-height: height
 	color: #fff
 	.widget, div, ul, li
 		display: inline-block
 		vertical-align: top
 		white-space: nowrap
+		line-height: height
 	#left
 		float: left
 		& > div:not(:first-child),
@@ -129,20 +132,36 @@ background-blur(blur-radius, grayscale, overlay-color, overlay-opacity)
 			&:last-child
 				margin-right: 10px
 
-
 .widget
+	.progress
+		margin: 0 10px 0 0
+		background: linear-gradient(top, rgba(#fff, .15), rgba(#fff, .3))
+		width: 100px
+		position: relative
+		box-shadow: 0 -1px 0 #000, 0 1px 0 rgba(#fff, .4)
+		height: 5px
+		border-radius: 2px
+		display: inline-block
+		top: (height / 2) - (@height / 2)
+		.bar
+			height: @height
+			border-radius: @border-radius
+			background: linear-gradient(top, rgba(#fff, .7), rgba(#fff, .3))
+			position: absolute
+			transition: all .2s ease
 	&#desktops
 		li
-			padding: 0 10px
 			cursor: pointer
 			position: relative
 			height: height
-			line-height: height
+			width: height
+			text-align: center
 			color: rgba(#fff, .9)
 			text-shadow: 0 -1px 1px rgba(#000, 1)
+			background: linear-gradient(top, transparent 0%, transparent 50%, rgba(#fff, .9) 50%, rgba(#fff, .7)) 0 0
+			background-size: height (height * 2)
+			transition: all .1s linear
 			&:hover
-				border-width = 2px
-				background: linear-gradient(bottom, transparent, transparent (height - border-width), rgba(#fff, .5) (height - border-width), rgba(#fff, .6))
 				color: #fff
 			&.urgent
 				animation: urgent-pulse 1.5s linear infinite
@@ -152,34 +171,34 @@ background-blur(blur-radius, grayscale, overlay-color, overlay-opacity)
 				&::after
 					position: absolute
 					content: ''
-					width: 5px
-					height: 5px
+					width: 6px
+					height: 6px
 					top: 1px
 					right: 1px
-					background: linear-gradient(45deg, transparent, transparent, rgba(#fff, .5) 50%, rgba(#fff, .7))
+					background: linear-gradient(45deg, transparent, transparent 50%, rgba(#fff, .3) 50%, rgba(#fff, .4) 60%, transparent 60%)
 			&.selected
-				background: linear-gradient(top, rgba(#fff, .9), rgba(#fff, .7))
+				background-position: 0% (-(height))
 				color: rgba(#000, .9)
 				text-shadow: 0 1px 0 rgba(#fff, .7)
 				font-weight: bold
 				&.has-windows
 					&::after
-						background: linear-gradient(45deg, transparent, transparent, rgba(#000, .5) 50%, rgba(#000, .7))
+						background: linear-gradient(45deg, transparent, transparent 50%, rgba(#000, .5) 50%)
 	&#window
 		max-width = 500px
 		max-width: max-width
 		overflow: hidden
 		text-overflow: clip
 		-webkit-mask-image: -webkit-linear-gradient(left, rgba(#000, 1), rgba(#000, 1) max-width - 50px, rgba(#000, 0) max-width)
-	&#date
-		.icon::before
-			content: '\e70a'
-		color: #eee
-	&#time
+	&#datetime
 		.icon::before
 			content: '\e622'
-		font-weight: bold
 		margin: 0 10px 0 0
+		.date
+			color: rgba(#fff, .85)
+			margin: 0 10px 0 0
+		.time
+			font-weight: bold
 	&#notifications
 		margin: 0 10px 0 0 !important
 		li
@@ -237,25 +256,13 @@ background-blur(blur-radius, grayscale, overlay-color, overlay-opacity)
 	&#now_playing
 		.icon::before
 			content: '\e67e'
-		.progress
-			background: linear-gradient(top, rgba(#fff, .2), rgba(#fff, .4))
-			border-radius: 2px
-			width: 100px
-			height: 4px
-			position: relative
-			margin: 11px 10px 0 10px
-			.bar
-				height: 4px
-				border-radius: 2px
-				background: linear-gradient(top, rgba(#fff, .7), rgba(#fff, .4))
-				position: absolute
 		.status-icon
 			&::before
 				content: '\e673'
 			&.playing::before
 				content: '\e666'
 		.time
-			margin: 0 10px
+			margin: 0 10px 0 0
 			.total_time
 				font-size: 10px
 				opacity: .8
@@ -264,10 +271,8 @@ background-blur(blur-radius, grayscale, overlay-color, overlay-opacity)
 					content: ' / '
 		.song
 			width = 300px
-			margin: 0 10px
 			max-width: width
 			height: height
-			line-height: height
 			overflow: hidden
 			text-overflow: clip
 			-webkit-mask-image: -webkit-linear-gradient(left, rgba(#000, 1), rgba(#000, 1) width - 30px, rgba(#000, 0) width)
@@ -291,24 +296,6 @@ background-blur(blur-radius, grayscale, overlay-color, overlay-opacity)
 			&.off::before
 				content: '\e60c'
 				background-color: error-col
-		.progress
-			background: linear-gradient(top, rgba(#000, .5), rgba(#000, 0))
-			box-shadow: inset 0 1px 1px #000, inset 0 -1px 1px rgba(#fff, .4)
-			border-radius: 5px
-			width: 100px
-			height: 14px
-			position: relative
-			top: 7px
-			margin: 0 0 0 5px
-			.bar
-				height: 10px
-				border-radius: 5px
-				col = #aaa
-				background: linear-gradient(top, col, darken(col, 20))
-				position: absolute
-				top: 2px
-				left: 2px
-				box-shadow: inset 0 1px 1px lighten(col, 10), inset 0 -1px 1px darken(col, 20)
 	&#weather
 		.icon
 			height: height - 4px
