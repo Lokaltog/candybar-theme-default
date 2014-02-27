@@ -11,6 +11,11 @@ urgent-color = #f30
 error-col = #d32
 warning-col = #e92
 
+// background can be any color or your background image of choice (url('...'))
+// set .blur and/or .desaturate on the body element to blur/desaturate the background image
+statusline-background = #111
+blur-radius = 3px
+
 @font-face
 	src: url('static/font/Elusive-Icons.svg') format('svg')
 	font-family: font-icons
@@ -46,7 +51,6 @@ html, body
 	font: 14px font-main
 	background: #000
 	cursor: default
-	text-shadow: 0 1px 0 rgba(#000, .8)
 	overflow: hidden
 	-webkit-user-select: none
 
@@ -60,54 +64,46 @@ html, body
 	font-weight: normal
 	height: height
 	line-height: height
-	text-shadow: none !important
 	width: height
 	vertical-align: middle
 	-webkit-background-clip: text
 	-webkit-text-fill-color: transparent
 
-background-blur(blur-radius, grayscale, overlay-color, overlay-opacity)
-	background-position: blur-radius blur-radius
-	top: -(blur-radius)
-	left: -(blur-radius)
-	width: @width + (blur-radius * 4)
-	height: @height + (blur-radius * 4)
-	-webkit-filter: blur(blur-radius) grayscale(grayscale)
-	&:after
-		position: absolute
-		top: 0
-		left: 0
-		width: 100%
-		height: 100%
-		content: ''
-		background: linear-gradient(top, rgba(overlay-color, overlay-opacity), rgba(overlay-color, overlay-opacity + .4))
-
 #statusline-bg
+	background: statusline-background
 	position: absolute
 	width: width
-	height: height - 2px
+	height: height
 	top: 0
 	left: 0
 	z-index: 10
-	background: #000 linear-gradient(top, rgba(#333, .8), rgba(#111, .8))
-	border-top: 1px solid rgba(#fff, .2)
-	border-bottom: 1px solid rgba(#000, .8)
-	&.dark-bg
-		background-blur(4px, 0, #000, .2)
-	&.medium-bg
-		background-blur(4px, 100%, #000, .4)
+	&.blur
+		background-position: blur-radius blur-radius
+		top: -(blur-radius)
+		height: @height + (blur-radius * 4)
+		-webkit-filter: blur(blur-radius)
+	&.desaturate
+		-webkit-filter: grayscale(100%)
+	&.blur.desaturate
+		-webkit-filter: blur(blur-radius) grayscale(100%)
 
 #statusline
+	// this overlay works pretty well both with and without background images
+	opacity = .6
+	border-top: 1px solid rgba(#fff, 1 - opacity - .2)
+	border-bottom: 1px solid rgba(#000, opacity)
+	background: linear-gradient(top, rgba(#333, opacity), rgba(#000, opacity))
+
 	position: relative
 	z-index: 11
 	width: width
-	height: height
+	height: height - 2px
 	color: #fff
 	.widget, div, ul, li
 		display: inline-block
 		vertical-align: top
 		white-space: nowrap
-		line-height: height
+		line-height: height - 1px
 	#left
 		float: left
 		& > div:not(:first-child),
@@ -148,7 +144,6 @@ background-blur(blur-radius, grayscale, overlay-color, overlay-opacity)
 			border-radius: @border-radius
 			background: linear-gradient(top, rgba(#fff, .7), rgba(#fff, .3))
 			position: absolute
-			transition: all .2s ease
 	&#desktops
 		li
 			cursor: pointer
@@ -157,7 +152,6 @@ background-blur(blur-radius, grayscale, overlay-color, overlay-opacity)
 			width: height
 			text-align: center
 			color: rgba(#fff, .9)
-			text-shadow: 0 -1px 1px rgba(#000, 1)
 			background: linear-gradient(top, transparent 0%, transparent 50%, rgba(#fff, .9) 50%, rgba(#fff, .7)) 0 0
 			background-size: height (height * 2)
 			transition: all .1s linear
