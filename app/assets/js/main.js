@@ -49,7 +49,6 @@ widget_desktops = function (config) {
 
 		// check if we need to replace all the desktop elements
 		if (this.data.desktopsLen !== data.desktops.length) {
-			console.log('replace')
 			this.data.desktopsLen = data.desktops.length
 			while (this.containers.desktops.firstChild) {
 				this.containers.desktops.removeChild(this.containers.desktops.firstChild)
