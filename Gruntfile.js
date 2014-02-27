@@ -90,7 +90,10 @@ module.exports = function (grunt) {
 		uglify: {
 			all: {
 				files: {
-					'webroot/static/js/main.js': ['app/assets/js/lib/angular.min.js', 'app/assets/js/main.js'],
+					'webroot/static/js/main.js': [
+						'app/assets/js/utils.js',
+						'app/assets/js/main.js',
+					],
 				},
 			},
 		},

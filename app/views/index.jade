@@ -1,69 +1,53 @@
 doctype html
-html(ng-app='Wkline')
+html
 	head
 		meta(charset='utf-8')
 		meta(http-equiv='Content-Type', content='text/html;charset=utf-8')
-		meta(http-equiv='X-UA-Compatible', content='IE=edge,chrome=1')
-		meta(name='viewport', content='width=device-width,initial-scale=1.0')
 
 		title wkline
 
 		link(rel='stylesheet', href='static/css/main.css', type='text/css')
 
 	body
-		#statusline(ng-cloak, ng-controller='WklineCtrl')
+		#statusline-bg
+		#statusline
 			#left
-				ul.widget#tags(ng-show='widget.desktop')
-					li.tag(ng-repeat='(idx, d) in widget.desktop.desktops', ng-class='{selected: (idx == widget.desktop.current_desktop), urgent: d.is_urgent, "has-windows": d.clients_len > 0}')
-						span.name(ng-bind='idx + 1')
+				ul.widget.hide#desktops
 
-				.widget#layout(ng-show='widget.layout')
-					.name(ng-bind='widget.layout.name')
+				.widget.hide#layout
+					.name
 
-				.widget#window(ng-show='widget.desktop.current_window')
-					.name(ng-bind='widget.desktop.current_window')
+				.widget.hide#window
+					.name
 
 			#right
-				ul.widget#notification(ng-show='widget.notifications')
-					li(ng-repeat='(i, n) in widget.notifications', ng-class='n.class', ng-click='widget.notifications.splice(i, 1)')
-						i(ng-class='n.icon')
-						.content
-							span.summary(ng-bind='n.summary')
-							span.body(ng-bind='n.body')
-
-				.widget#player(ng-show='widget.now_playing.title')
-					i.fa.fa-music
-					.time(ng-show='widget.now_playing.elapsed_time')
-						span.current(ng-bind='widget.now_playing.elapsed_time')
-						span.total(ng-bind='widget.now_playing.total_time')
-					.progress(ng-show='widget.now_playing.elapsed_percent')
-						.bar(ng-style='{width: widget.now_playing.elapsed_percent + "%"}')
-					i.fa.fa-play(ng-show='widget.now_playing.playing')
-					i.fa.fa-pause(ng-show='! widget.now_playing.playing')
-					.song
-						span.artist(ng-bind='widget.now_playing.artist')
-						span.title(ng-bind='widget.now_playing.title')
-
-				.widget#weather(ng-show='widget.weather')
-					img.icon(ng-src='static/img/weather/{{widget.weather.icon || "na"}}.svg')
-					span.temp(ng-class='widget.weather.unit', ng-bind='widget.weather.temp') 0
-
-				.widget#volume(ng-show='widget.volume')
-					i.fa.fa-volume-off(ng-if='widget.volume.volume_percent <= 10')
-					i.fa.fa-volume-down(ng-if='widget.volume.volume_percent >= 11 && widget.volume.volume_percent <= 75')
-					i.fa.fa-volume-up(ng-if='widget.volume.volume_percent >= 76')
+				.widget.hide#now_playing
+					span.icon.widget-icon
+					.time
+						span.elapsed_time
+						span.total_time
 					.progress
-						.bar(ng-style='{width: widget.volume.volume_percent + "%"}')
+						.bar.elapsed_percent
+					span.icon.status-icon
+					.song
+						span.artist
+						span.title
 
-				.widget#date(ng-show='widget.datetime')
-					i.fa.fa-calendar
-					span(ng-bind='widget.datetime.date')
+				.widget.hide#weather
+					img.icon
+					span.temp
 
-				.widget#time(ng-show='widget.datetime')
-					i.fa.fa-clock-o
-					span(ng-bind='widget.datetime.time')
+				.widget.hide#volume
+					span.icon.widget-icon
+					.progress
+						.bar.volume_percent
 
-		#statusline-bg
-		#statusline-loading(ng-hide='1')
+				.widget.hide#date
+					span.icon.widget-icon
+					span.date
+
+				.widget.hide#time
+					span.icon.widget-icon
+					span.time
 
 	script(src='static/js/main.js')

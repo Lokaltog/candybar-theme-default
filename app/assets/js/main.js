@@ -1,125 +1,197 @@
-// This will be created inside the WklineCtrl scope, but it will be globally
-// available for data injection into the controller scope
-var wkInject,
-    wkHandlers,
-    wkFilters,
-    merge_recursive,
-    pad
+var widgets = new WidgetStorage(),
+    widget_datetime
 
-merge_recursive = function (obj1, obj2) {
-	// http://stackoverflow.com/questions/171251/how-can-i-merge-properties-of-two-javascript-objects-dynamically
-	for (var p in obj2) {
-		try {
-			// Property in destination object set update its value.
-			if (obj2[p].constructor === Object) {
-				obj1[p] = merge_recursive(obj1[p], obj2[p])
-			} else {
-				obj1[p] = obj2[p]
+widget_datetime = function (config) {
+	this.config = mergeRecursive({
+		interval: 1000,
+		showSeconds: true,
+	}, config)
+	this.containers = {
+		date: $('#date'),
+		time: $('#time'),
+	}
+	this.fields = {
+		date: $('.date', this.containers.date),
+		time: $('.time', this.containers.time),
+	}
+	this.init = function () {
+		show(this.containers.date, this.containers.time)
+		setInterval(this.update.bind(this), this.config.interval)
+		this.update()
+	}
+	this.update = function () {
+		var now = new Date(),
+		    date = now.getFullYear() + '-' +
+			    pad(now.getMonth() + 1, 2) + '-' +
+			    pad(now.getDate(), 2),
+		    time = pad(now.getHours(), 2) + ':' +
+			    pad(now.getMinutes(), 2)
+
+		if (this.config.showSeconds) {
+			time += ':' +  pad(now.getSeconds(), 2)
+		}
+
+		this.fields.date.textContent = date
+		this.fields.time.textContent = time
+	}
+}
+
+widget_desktops = function (config) {
+	this.config = mergeRecursive({
+	}, config)
+	this.containers = {
+		desktops: $('#desktops'),
+		window: $('#window'),
+	}
+	this.data = {}
+	this.update = function (data) {
+		show(this.containers.desktops, this.containers.window)
+
+		// check if we need to replace all the desktop elements
+		if (this.data.desktopsLen !== data.desktops.length) {
+			console.log('replace')
+			this.data.desktopsLen = data.desktops.length
+			while (this.containers.desktops.firstChild) {
+				this.containers.desktops.removeChild(this.containers.desktops.firstChild)
+			}
+			for (var i = 0; i < data.desktops.length; i += 1) {
+				var desktopEl = document.createElement('li'),
+				    desktopName = (i + 1).toString()
+				desktopEl.textContent = desktopName
+				desktopEl.classList.add('desktop-' + desktopName, 'desktop')
+				this.containers.desktops.appendChild(desktopEl)
 			}
 		}
-		catch (e) {
-			// Property in destination object not set create it and set its value.
-			obj1[p] = obj2[p]
-		}
+
+		data.desktops.forEach(function (d, i) {
+			var desktopEl = $('.desktop-' + (i + 1))
+			desktopEl.classList.remove('selected', 'has-windows', 'urgent')
+			if (d.clients_len > 0) {
+				desktopEl.classList.add('has-windows')
+			}
+			if (d.is_urgent) {
+				desktopEl.classList.add('urgent')
+			}
+			if (i === data.current_desktop) {
+				desktopEl.classList.add('selected')
+			}
+		})
+
+		this.containers.window.textContent = data.current_window
 	}
-
-	return obj1
 }
 
-pad = function (n, width, z) {
-	z = z || '0'
-	n = n + ''
-	return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n
-}
+widget_now_playing = function (config) {
+	this.config = mergeRecursive({
+		interval: 1000,
+	}, config)
+	this.container = $('#now_playing')
+	this.fields = {
+		elapsed_time: $('.elapsed_time', this.container),
+		total_time: $('.total_time', this.container),
+		elapsed_percent_bar: $('.bar.elapsed_percent', this.container),
+		artist: $('.artist', this.container),
+		title: $('.title', this.container),
+		status_icon: $('.status-icon', this.container),
+	}
+	this.data = {}
+	this.elapsedUpdater = null
+	this.elapsedUpdaterCb = function () {
+		this.data.elapsed_sec += 1
 
-wkHandlers = {
-	widget: function ($scope, data) {
-		if (! $scope.widget.hasOwnProperty(data._widget)) {
-			$scope.widget[data._widget] = {}
+		var elapsedMinutes = Math.floor(this.data.elapsed_sec / 60),
+		    elapsedSeconds = this.data.elapsed_sec % 60
+
+		this.fields.elapsed_time.textContent = elapsedMinutes + ':' + pad(elapsedSeconds, 2)
+		this.fields.elapsed_percent_bar.style.width = (this.data.elapsed_sec / this.data.total_sec * 100) + '%'
+	}
+	this.update = function (data) {
+		if (! data.artist || ! data.title) {
+			hide(this.container)
+			return
 		}
-		$scope.widget[data._widget] = merge_recursive($scope.widget[data._widget], data)
-	},
-}
+		this.data = data
+		show(this.container)
 
-wkFilters = {
-	now_playing: function (data) {
 		var elapsedMinutes = Math.floor(data.elapsed_sec / 60),
 		    elapsedSeconds = data.elapsed_sec % 60,
 		    totalMinutes = Math.floor(data.total_sec / 60),
 		    totalSeconds = data.total_sec % 60
 
-		data.elapsed_time = elapsedMinutes + ':' + pad(elapsedSeconds, 2)
-		data.total_time = totalMinutes + ':' + pad(totalSeconds, 2)
-		data.elapsed_percent = data.elapsed_sec / data.total_sec * 100
-
-		return data
-	},
-	weather: function (data) {
-		var tempConversions = {
-			'c': function (temp) { return temp },
-			'f': function (temp) { return (temp * 9 / 5) + 32 },
-			'k': function (temp) { return temp + 273.15 },
+		this.fields.elapsed_time.textContent = elapsedMinutes + ':' + pad(elapsedSeconds, 2)
+		this.fields.total_time.textContent = totalMinutes + ':' + pad(totalSeconds, 2)
+		this.fields.elapsed_percent_bar.style.width = (data.elapsed_sec / data.total_sec * 100) + '%'
+		this.fields.artist.textContent = data.artist
+		this.fields.title.textContent = data.title
+		if (data.playing) {
+			this.fields.status_icon.classList.add('playing')
+		}
+		else {
+			this.fields.status_icon.classList.remove('playing')
 		}
 
-		if (! tempConversions.hasOwnProperty(data.unit)) {
-			data = {}
+		clearInterval(this.elapsedUpdater)
+		if (data.playing) {
+			this.elapsedUpdater = setInterval(this.elapsedUpdaterCb.bind(this), this.config.interval)
 		}
-		data.temp = tempConversions[data.unit](data.temp)
-
-		return data
-	},
+	}
 }
 
-angular.module('Wkline', [])
-	.controller('WklineCtrl', ['$scope', function ($scope) {
-		$scope.widget = {}
+widget_volume = function (config) {
+	this.config = mergeRecursive({
+	}, config)
+	this.container = $('#volume')
+	this.fields = {
+		icon: $('.icon', this.container),
+		percent_bar: $('.bar.volume_percent', this.container),
+	}
+	this.update = function (data) {
+		show(this.container)
 
-		var updateDatetimeWidget = function () {
-			var now = new Date()
-			$scope.widget.datetime = {
-				date: now.getFullYear() + '-' +
-					pad(now.getMonth() + 1, 2) + '-' +
-					pad(now.getDate(), 2),
-				time: pad(now.getHours(), 2) + ':' +
-					pad(now.getMinutes(), 2),
-			}
+		this.fields.percent_bar.style.width = data.percent + '%'
+
+		this.fields.icon.classList.remove('off', 'low', 'medium', 'high')
+		if (data.percent > 75) {
+			this.fields.icon.classList.add('high')
 		}
-
-		// For some reason $scope.$apply breaks if run outside this setTimeout block
-		setTimeout(function () { $scope.$apply(updateDatetimeWidget)}, 1)
-		setInterval(function () { $scope.$apply(updateDatetimeWidget)}, 10000)
-
-		wkInject = function (payload) {
-			if (! payload) {
-				return false
-			}
-
-			$scope.$apply(function () {
-				var handler
-
-				if (payload.hasOwnProperty('widget')) {
-					handler = 'widget'
-					payload.data._widget = payload.widget
-				}
-				if (payload.hasOwnProperty('init')) {
-					handler = 'init'
-				}
-				if (payload.hasOwnProperty('action')) {
-					handler = 'action'
-				}
-
-				if (! handler || ! wkHandlers.hasOwnProperty(handler)) {
-					return false
-				}
-
-				try {
-					if (wkFilters.hasOwnProperty(payload.data._widget)) {
-						// pass through filter
-						payload.data = wkFilters[payload.data._widget](payload.data)
-					}
-					wkHandlers[handler]($scope, payload.data)
-				}
-				catch (e) {}
-			})
+		else if (data.percent > 30) {
+			this.fields.icon.classList.add('medium')
 		}
-	}])
+		else if (data.percent > 0) {
+			this.fields.icon.classList.add('low')
+		}
+		else {
+			this.fields.icon.classList.add('off')
+		}
+	}
+}
+
+widget_weather = function (config) {
+	this.config = mergeRecursive({
+	}, config)
+	this.container = $('#weather')
+	this.fields = {
+		icon: $('.icon', this.container),
+		temp: $('.temp', this.container),
+	}
+	this.tempConversions = {
+		'c': function (temp) { return temp },
+		'f': function (temp) { return (temp * 9 / 5) + 32 },
+		'k': function (temp) { return temp + 273.15 },
+	}
+	this.update = function (data) {
+		show(this.container)
+		this.fields.temp.classList.remove('c', 'f', 'k')
+
+		this.fields.icon.src = 'static/img/weather/' + data.icon + '.svg'
+		this.fields.temp.textContent = this.tempConversions[data.unit.toLowerCase()](data.temp)
+		this.fields.temp.classList.add(data.unit)
+	}
+}
+
+// TODO move this to the C files based on the #defines there
+widgets.register('datetime')
+widgets.register('desktops')
+widgets.register('now_playing')
+widgets.register('volume')
+widgets.register('weather')
