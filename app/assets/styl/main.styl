@@ -64,7 +64,6 @@ html, body
 	font-weight: normal
 	height: height
 	line-height: height
-	width: height
 	vertical-align: middle
 	-webkit-background-clip: text
 	-webkit-text-fill-color: transparent
@@ -113,8 +112,7 @@ html, body
 		float: right
 		.widget
 			position: relative
-			margin: 0 0 0 10px
-			padding: 0 0 0 10px
+			padding: 0 12px
 			border-left: 1px solid rgba(#fff, .1)
 			&:before
 				display: inline-block
@@ -125,8 +123,6 @@ html, body
 				position: absolute
 				left: -2px
 				top: 0
-			&:last-child
-				margin-right: 10px
 
 .widget
 	.progress
@@ -145,18 +141,16 @@ html, body
 			background: linear-gradient(top, rgba(#fff, .7), rgba(#fff, .3))
 			position: absolute
 	&.popup
-		.widget-icon
-			text-align: center
 		.popup-contents
 			overflow: hidden
 			max-width: 0
 			overflow: hidden
-			transition: all .2s ease, opacity .1s linear
+			transition: all .2s ease
 			opacity: 0
-		.widget-icon:hover + .popup-contents,
+		&:hover .popup-contents,
 		.popup-contents:hover
 			opacity: 1
-			max-width: 100px
+			max-width: 200px
 	&#desktops
 		li
 			cursor: pointer
@@ -200,10 +194,9 @@ html, body
 	&#datetime
 		.icon::before
 			content: '\e622'
-		margin: 0 10px 0 0
 		.date
+			margin: 0 10px
 			color: rgba(#fff, .85)
-			margin: 0 10px 0 0
 		.time
 			font-weight: bold
 	&#notifications
@@ -269,21 +262,22 @@ html, body
 			&.playing::before
 				content: '\e666'
 		.time
-			margin: 0 10px 0 0
+			.elapsed_time
+				margin: 0 0 0 10px
 			.total_time
 				font-size: 10px
 				opacity: .8
 				vertical-align: middle
 				&:before
 					content: ' / '
+		.progress
+			margin: 0 10px
 		.song
-			width = 300px
-			max-width: width
 			height: height
 			overflow: hidden
 			text-overflow: clip
-			-webkit-mask-image: -webkit-linear-gradient(left, rgba(#000, 1), rgba(#000, 1) width - 30px, rgba(#000, 0) width)
 			.artist
+				margin: 0 0 0 10px
 				display: inline
 				opacity: .8
 				&::after
@@ -293,6 +287,8 @@ html, body
 			.title
 				display: inline
 	&#volume
+		.progress
+			margin: 0 0 0 10px
 		.icon
 			&.high::before
 				content: '\e60b'
@@ -320,5 +316,6 @@ html, body
 		.icon::before
 			content: '\e6b5'
 		.ip
+			margin: 0 0 0 10px
 			cursor: auto
 			-webkit-user-select: text
