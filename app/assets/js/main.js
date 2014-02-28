@@ -144,6 +144,10 @@ widget_volume = function (config) {
 	this.update = function (data) {
 		show(this.container)
 
+        if (data.percent > 100) {
+            data.percent = 100
+        }
+
 		this.fields.percent_bar.style.width = data.percent + '%'
 
 		this.fields.icon.classList.remove('off', 'low', 'medium', 'high')
