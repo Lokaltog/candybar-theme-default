@@ -1,6 +1,67 @@
 var widgets = new WidgetStorage(),
     widget_datetime
 
+widget_battery = function (config) {
+	var stateClass = {
+		0: 'unknown',
+		1: 'charging',
+		2: 'discharging',
+		3: 'empty',
+		4: 'full',
+		5: 'charging', // charging pending
+		6: 'discharging', // discharging pending
+	}
+	this.config = mergeRecursive({
+	}, config)
+	this.container = $('#battery')
+	this.fields = {
+		icon: $('.icon', this.container),
+		percentage: $('.percentage', this.container),
+		time_left: $('.time_left', this.container),
+	}
+	this.update = function (data) {
+		var sec, timeLeft = '', timeLeftHours, timeLeftMinutes, timeLeftSeconds
+		show(this.container)
+		if (data.time_to_empty) {
+			sec = data.time_to_empty
+		}
+		if (data.time_to_full) {
+			sec = data.time_to_full
+		}
+		if (sec) {
+			timeLeftHours = parseInt(sec / 3600, 10) % 24
+			timeLeftMinutes = parseInt(sec  / 60, 10) % 60
+			timeLeftSeconds = parseInt(sec % 60, 10)
+			if (timeLeftHours) {
+				timeLeft += pad(timeLeftHours, 2) + ':'
+			}
+			if (timeLeftMinutes) {
+				timeLeft += pad(timeLeftMinutes, 2) + ':'
+			}
+			timeLeft += pad(timeLeftSeconds, 2)
+		}
+
+		this.container.classList.remove('state-unknown', 'state-charging', 'state-discharging', 'state-empty', 'state-full')
+		this.container.classList.add('state-' + stateClass[data.state])
+		this.container.classList.remove('percentage-critical', 'percentage-low', 'percentage-medium', 'percentage-high')
+		if (data.percentage >= 70) {
+			this.container.classList.add('percentage-high')
+		}
+		else if (data.percentage >= 40) {
+			this.container.classList.add('percentage-medium')
+		}
+		else if (data.percentage >= 5) {
+			this.container.classList.add('percentage-low')
+		}
+		else {
+			this.container.classList.add('percentage-critical')
+		}
+
+		this.fields.percentage.textContent = Math.round(data.percentage) + '%'
+		this.fields.time_left.textContent = timeLeft
+	}
+}
+
 widget_datetime = function (config) {
 	this.config = mergeRecursive({
 		interval: 1000,
@@ -198,6 +259,7 @@ widget_weather = function (config) {
 }
 
 // TODO move this to the C files based on the #defines there
+widgets.register('battery')
 widgets.register('datetime')
 widgets.register('desktops')
 widgets.register('external_ip')

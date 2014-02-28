@@ -10,6 +10,7 @@ progress-size = 50px
 urgent-color = #f30
 error-col = #d32
 warning-col = #e92
+good-col = #7a3
 
 // background can be any color or your background image of choice (url('...'))
 // set .blur and/or .desaturate on the body element to blur/desaturate the background image
@@ -319,3 +320,31 @@ html, body
 			margin: 0 0 0 10px
 			cursor: auto
 			-webkit-user-select: text
+	&#battery
+		.icon
+			font-size: 19px
+			margin-top: -2px
+		.percentage
+			margin: 0 0 0 10px
+		.time_left
+			opacity: .8
+			margin: 0 0 0 10px
+			&:after
+				content: ' left'
+		&.percentage-high .icon::before
+			content: '\e803'
+		&.percentage-medium .icon::before
+			content: '\e802'
+		&.percentage-low .icon::before
+			content: '\e801'
+		&.percentage-critical
+			animation: urgent-pulse 2s ease infinite
+			font-weight: bold
+			.icon::before
+				content: '\e800'
+		&.state-charging
+			animation: none
+			.icon::before
+				content: '\e804'
+		&.state-full .icon::before
+			background-color: good-col
