@@ -10,6 +10,7 @@ progress-size = 50px
 urgent-color = #f30
 error-col = #d32
 warning-col = #e92
+notification-color = #25a
 
 // background can be any color or your background image of choice (url('...'))
 // set .blur and/or .desaturate on the body element to blur/desaturate the background image
@@ -206,60 +207,6 @@ html, body
 			margin: 0 10px 0 0
 		.time
 			font-weight: bold
-	&#notifications
-		margin: 0 10px 0 0 !important
-		li
-			height: height - 4px
-			cursor: pointer
-			line-height: height - 4px
-			text-align: center
-			margin: 2px 0 0 5px
-			animation: bubble 0.3s ease
-			padding: 0 7px
-			border-radius: 2px
-			i.icon
-				font-size: 20px
-				margin: 2px 0 0 0
-			&.error i
-				background: linear-gradient(top, lighten(error-col, 20), error-col)
-				-webkit-background-clip: text
-				-webkit-text-fill-color: transparent
-			&.warning i
-				background: linear-gradient(top, lighten(warning-col, 20), warning-col)
-				-webkit-background-clip: text
-				-webkit-text-fill-color: transparent
-			.content
-				max-width: 0
-				overflow: hidden
-				transition: max-width .2s
-				opacity: 0
-			&:hover
-				&.error i, &.warning i
-					background: linear-gradient(top, rgba(#fff, 1), rgba(#fff, .7))
-					-webkit-background-clip: text
-					-webkit-text-fill-color: transparent
-				box-shadow: inset 0 -1px 1px 0 rgba(#000, .2), inset 0 1px 1px 0 rgba(#fff, .2)
-				.content, .content *
-					display: inline-block
-				.content
-					text-align: left
-					opacity: 1
-					max-width: 300px
-					transition: max-width .8s, opacity .5s
-				&.error
-					background: linear-gradient(top, error-col, darken(error-col, 10))
-				&.warning
-					background: linear-gradient(top, warning-col, darken(warning-col, 10))
-				.icon
-					margin: 0 5px 0 0
-					font-size: 14px
-				.close
-					opacity: .5
-					margin: 0 0 0 5px
-				.summary
-					font-weight: bold
-				.body
-					margin: 0 0 0 5px
 	&#now_playing
 		.icon::before
 			content: '\e67e'
@@ -322,3 +269,46 @@ html, body
 		.ip
 			cursor: auto
 			-webkit-user-select: text
+	&#notifications
+		.icon
+			&.pending
+				color: lighten(notification-color, 50)
+				font-weight: bold
+				animation: bubble .3s ease-out
+				position: relative
+				z-index: 20
+				&::before
+					content: '\e699'
+					background-color: notification-color
+					width: height - 4px
+		.notification
+			max-width: 0
+			overflow: hidden
+			opacity: 0
+			transition: all .2s ease, opacity .1s linear
+			.contents
+				cursor: pointer
+				border-radius: 2px
+				background: linear-gradient(top, lighten(notification-color, 10), darken(notification-color, 10))
+				color: #fff
+				padding: 0 10px
+				margin: 0 0 0 10px
+				height: height - 2px
+				font-size: 13px
+				text-shadow: 0 -1px 0 rgba(#000, .8)
+				box-shadow: inset 0 1px 1px rgba(#fff, .3), inset 0 -1px 1px rgba(#000, .3)
+				.summary
+					font-weight: bold
+					margin: 0 10px 0 0
+				.body
+					color: rgba(#fff, .8)
+				.close::before
+					font-family: font-icons
+					font-weight: normal
+					content: '\e700'
+					color: rgba(#fff, .7)
+					margin: 0 0 0 10px
+		.pending:hover + .notification,
+		.notification:hover
+			opacity: 1
+			max-width: 300px

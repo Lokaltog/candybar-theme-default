@@ -21,6 +21,11 @@ html
 					.name
 
 			#right
+				.widget.hide.popup#external_ip
+					span.icon.widget-icon
+					span.popup-contents
+						span.ip
+
 				.widget.hide#now_playing
 					span.icon.widget-icon
 					.time
@@ -42,10 +47,14 @@ html
 					img.icon
 					span.temp
 
-				.widget.hide.popup#external_ip
-					span.icon.widget-icon
-					span.popup-contents
-						span.ip
+				.widget#notifications
+					span.icon.pending 1
+					.notification
+						.contents
+							span.icon
+							span.summary Test message
+							span.body Test body
+							span.close
 
 				.widget.hide#datetime
 					span.icon.widget-icon
