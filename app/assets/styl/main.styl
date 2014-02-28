@@ -99,7 +99,7 @@ html, body
 	width: width
 	height: height - 2px
 	color: #fff
-	.widget, div, ul, li
+	.widget, div, ul, li, span
 		display: inline-block
 		vertical-align: top
 		white-space: nowrap
@@ -144,6 +144,19 @@ html, body
 			border-radius: @border-radius
 			background: linear-gradient(top, rgba(#fff, .7), rgba(#fff, .3))
 			position: absolute
+	&.popup
+		.widget-icon
+			text-align: center
+		.popup-contents
+			overflow: hidden
+			max-width: 0
+			overflow: hidden
+			transition: all .2s ease, opacity .1s linear
+			opacity: 0
+		.widget-icon:hover + .popup-contents,
+		.popup-contents:hover
+			opacity: 1
+			max-width: 100px
 	&#desktops
 		li
 			cursor: pointer
@@ -303,3 +316,9 @@ html, body
 				content: '\00b0 F'
 			&.k::after
 				content: 'K'
+	&#external_ip
+		.icon::before
+			content: '\e6b5'
+		.ip
+			cursor: auto
+			-webkit-user-select: text

@@ -33,6 +33,18 @@ widget_datetime = function (config) {
 	}
 }
 
+widget_external_ip = function (config) {
+	this.config = mergeRecursive({
+	}, config)
+	this.container = $('#external_ip')
+	this.field = $('.ip', this.container),
+	this.data = {}
+	this.update = function (data) {
+		show(this.container)
+		this.field.textContent = data.ip
+	}
+}
+
 widget_desktops = function (config) {
 	this.config = mergeRecursive({
 	}, config)
@@ -188,6 +200,7 @@ widget_weather = function (config) {
 // TODO move this to the C files based on the #defines there
 widgets.register('datetime')
 widgets.register('desktops')
+widgets.register('external_ip')
 widgets.register('now_playing')
 widgets.register('volume')
 widgets.register('weather')
