@@ -3,7 +3,7 @@ reset-html5()
 
 // Global settings
 font-main = sans-serif
-font-icons = 'Elusive-Icons'
+font-icons = 'wkline-icons'
 width = 100%
 height = 26px
 progress-size = 50px
@@ -17,7 +17,7 @@ statusline-background = #111
 blur-radius = 3px
 
 @font-face
-	src: url('static/font/Elusive-Icons.svg') format('svg')
+	src: url('static/font/wkline-icons.svg') format('svg')
 	font-family: font-icons
 	font-style: normal
 	font-weight: normal
@@ -193,7 +193,7 @@ html, body
 		-webkit-mask-image: -webkit-linear-gradient(left, rgba(#000, 1), rgba(#000, 1) max-width - 50px, rgba(#000, 0) max-width)
 	&#datetime
 		.icon::before
-			content: '\e622'
+			content: '\e809'
 		.date
 			margin: 0 10px
 			color: rgba(#fff, .85)
@@ -255,12 +255,12 @@ html, body
 					margin: 0 0 0 5px
 	&#now_playing
 		.icon::before
-			content: '\e67e'
+			content: '\e810'
 		.status-icon
 			&::before
-				content: '\e673'
+				content: '\e80d'
 			&.playing::before
-				content: '\e666'
+				content: '\e80b'
 		.time
 			.elapsed_time
 				margin: 0 0 0 10px
@@ -291,13 +291,13 @@ html, body
 			margin: 0 0 0 10px
 		.icon
 			&.high::before
-				content: '\e60b'
+				content: '\e807'
 			&.medium::before
-				content: '\e637'
+				content: '\e806'
 			&.low::before
-				content: '\e60d'
+				content: '\e805'
 			&.off::before
-				content: '\e60c'
+				content: '\e805'
 				background-color: error-col
 	&#weather
 		.icon
@@ -314,7 +314,7 @@ html, body
 				content: 'K'
 	&#external_ip
 		.icon::before
-			content: '\e6b5'
+			content: '\e80a'
 		.ip
 			margin: 0 0 0 10px
 			cursor: auto
