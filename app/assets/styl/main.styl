@@ -155,15 +155,18 @@ html, body
 			max-width: 200px
 	&#desktops
 		li
+			margin: 0 0 0 2px
+			padding: 0 8px
 			cursor: pointer
 			position: relative
-			height: height
-			width: height
+			height: height - 2px
+			line-height: height - 2px
+			top: 1px
 			text-align: center
 			color: rgba(#fff, .9)
-			background: linear-gradient(top, transparent 0%, transparent 50%, rgba(#fff, .9) 50%, rgba(#fff, .7)) 0 0
+			background: linear-gradient(top, transparent 0%, transparent 50%, rgba(#fff, .7) 50%, rgba(#fff, .9)) 0 0
 			background-size: height (height * 2)
-			transition: all .1s linear
+			border-radius: 2px
 			&:hover
 				color: #fff
 			&.urgent
@@ -174,16 +177,17 @@ html, body
 				&::after
 					position: absolute
 					content: ''
-					width: 6px
-					height: 6px
+					width: 5px
+					height: 5px
 					top: 1px
 					right: 1px
-					background: linear-gradient(45deg, transparent, transparent 50%, rgba(#fff, .3) 50%, rgba(#fff, .4) 60%, transparent 60%)
+					background: linear-gradient(45deg, transparent, transparent 50%, rgba(#fff, .3) 50%)
 			&.selected
 				background-position: 0% (-(height))
 				color: rgba(#000, .9)
 				text-shadow: 0 1px 0 rgba(#fff, .7)
 				font-weight: bold
+				box-shadow: inset 0 -1px 1px rgba(#fff, 1), 0 1px 0 rgba(#000, .8)
 				&.has-windows
 					&::after
 						background: linear-gradient(45deg, transparent, transparent 50%, rgba(#000, .5) 50%)
