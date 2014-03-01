@@ -9,13 +9,13 @@ $ = function (selector, el) {
 
 show = function () {
 	for (var i = 0; i < arguments.length; i += 1) {
-		arguments[i].classList.remove('hide')
+		arguments[i].parentNode.style.display = 'inline-block'
 	}
 }
 
 hide = function () {
 	for (var i = 0; i < arguments.length; i += 1) {
-		arguments[i].classList.add('hide')
+		arguments[i].parentNode.style.display = 'none'
 	}
 }
 

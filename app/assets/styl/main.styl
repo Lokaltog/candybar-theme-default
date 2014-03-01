@@ -1,265 +1,218 @@
 global-reset()
 reset-html5()
 
-// Global settings
+// theme settings
 font-main = sans-serif
-font-icons = 'wkline-icons'
-width = 100%
-raw-height = 26px
-border-width = 1px
-height = raw-height - (border-width * 2)
-progress-size = 50px
-urgent-color = #f30
-error-col = #d32
-warning-col = #e92
-good-col = #7a3
+font-icons = wkline-icons
+font-size = 14px
+height = 26px
+color-background = #111
+color-foreground = #fff
+background-opacity = .6
+background-gradient-amount = 10
+border-opacity = .1
+padding-width = 10px
+desktop-margin = 2px
 
-// background can be any color or your background image of choice (url('...'))
-// set .blur and/or .desaturate on the body element to blur/desaturate the background image
-statusline-background = #111
-blur-radius = 3px
+color-red = #d32
+color-yellow = #e92
+color-green = #7a3
 
+// animations
+@keyframes urgent-pulse
+	0%
+		background: darken(color-red, 20)
+		text-shadow: 0 0 10px color-red, 0 0 5px color-red, 0 0 5px color-red, 0 0 2px color-foreground
+	40%
+		background: darken(color-red, 30)
+		text-shadow: none
+	80%, 100%
+		background: darken(color-red, 20)
+		text-shadow: 0 0 10px color-red, 0 0 5px color-red, 0 0 5px color-red, 0 0 2px color-foreground
+
+// core design
 @font-face
 	src: url('static/font/wkline-icons.svg') format('svg')
 	font-family: font-icons
 	font-style: normal
 	font-weight: normal
 
-@keyframes bubble
-	0%
-		transform: scale(0)
-	50%
-		transform: scale(2)
-	100%
-		transform: scale(1)
-
-@keyframes bg-move
-	0%
-		background-position: 0 0
-	100%
-		background-position: progress-size progress-size
-
-@keyframes urgent-pulse
-	0%
-		background: darken(urgent-color, 20)
-		text-shadow: 0 0 10px urgent-color, 0 0 5px urgent-color, 0 0 5px urgent-color, 0 0 2px #fff
-	40%
-		background: darken(urgent-color, 30)
-		text-shadow: none
-	80%, 100%
-		background: darken(urgent-color, 20)
-		text-shadow: 0 0 10px urgent-color, 0 0 5px urgent-color, 0 0 5px urgent-color, 0 0 2px #fff
-
 html, body
-	font: 14px font-main
 	background: #000
 	cursor: default
+	font-weight: bold
+	font: font-size/height font-main
+	line-height: height
 	overflow: hidden
-	-webkit-user-select: none
+	user-select: none
 
-.hide
-	display: none !important
+#statusline-bg
+	background: color-background linear-gradient(top, rgba(lighten(color-background, background-gradient-amount), background-opacity), rgba(darken(color-background, background-gradient-amount), background-opacity))
+	box-sizing: border-box
+	height: height
 
+#statusline
+	border-bottom: 1px solid rgba(#000, border-opacity + .5)
+	border-top: 1px solid rgba(#fff, border-opacity)
+	box-sizing: border-box
+	color: color-foreground
+	display: flex
+	flex-flow: row nowrap
+	height: height
+	position: relative
+	.widget
+		border-left: 1px solid rgba(#fff, border-opacity)
+		border-right: 1px solid rgba(#000, border-opacity + .5)
+		box-sizing: border-box
+		display: none
+		flex: 0 0 auto
+		text-overflow: ellipsis
+		&:first-child
+			border-left: none
+		&:last-child
+			border-right: none
+		.contents
+			margin: 0 padding-width
+			overflow: hidden
+			white-space: nowrap
+			*
+				display: inline-block
+		&.size-flex
+			flex: 0 1 auto
+		&.size-fill
+			// this needs to be visible for the flexbox to work
+			display: inline-block !important
+			flex: 1 1 auto
+		&.size-flex, &.size-fill
+			.contents
+				// fade end of text
+				-webkit-mask-image: -webkit-linear-gradient(left, rgba(#000, 1), rgba(#000, 1) 90%, rgba(#000, 0) 100%)
+
+// common widget elements
 .icon::before
-	background: linear-gradient(top, rgba(#fff, .7), rgba(#fff, .4))
+	background: linear-gradient(top, rgba(#fff, .7), rgba(#fff, .5))
 	display: inline-block
 	font-family: font-icons
-	font-weight: normal
-	height: height
-	line-height: height
+	font-size: font-size + 2px
+	text-align: center
+	width: font-size + 4px
 	-webkit-background-clip: text
 	-webkit-text-fill-color: transparent
 
-#statusline-bg
-	background: statusline-background
-	position: absolute
-	width: width
-	height: height
-	top: 0
-	left: 0
-	z-index: 10
-	&.blur
-		background-position: blur-radius blur-radius
-		top: -(blur-radius)
-		height: @height + (blur-radius * 4)
-		-webkit-filter: blur(blur-radius)
-	&.desaturate
-		-webkit-filter: grayscale(100%)
-	&.blur.desaturate
-		-webkit-filter: blur(blur-radius) grayscale(100%)
+.progress
+	progress-height = 4px
+	progress-width = 100px
 
-#statusline
-	// this overlay works pretty well both with and without background images
-	opacity = .6
-	border-top: 1px solid rgba(#fff, 1 - opacity - .2)
-	border-bottom: 1px solid rgba(#000, opacity)
-	background: linear-gradient(top, rgba(#333, opacity), rgba(#000, opacity))
-
+	background: linear-gradient(top, rgba(#fff, .15), rgba(#fff, .3))
+	border-radius: (progress-height / 2)
+	box-shadow: 0 -1px 0 #000, 0 1px 0 rgba(#fff, .4)
+	height: progress-height
 	position: relative
-	z-index: 11
-	width: width
-	height: height
-	line-height: height
-	color: #fff
-	.widget, div, ul, li, span
-		display: inline-block
-		vertical-align: top
-		white-space: nowrap
-	#left
-		float: left
-		& > div:not(:first-child),
-		& > ul:not(:first-child)
-			margin: 0 0 0 20px
-	#right
-		float: right
-		.widget
-			position: relative
-			padding: 0 12px
-			border-left: 1px solid rgba(#fff, .1)
-			&:before
-				display: inline-block
-				height: height
-				width: 1px
-				background: rgba(#000, .8)
-				content: ''
-				position: absolute
-				left: -2px
-				top: 0
+	top: (height / 2) - (progress-height / 2)
+	vertical-align: top
+	width: progress-width
+	.bar
+		background: linear-gradient(top, rgba(#fff, .7), rgba(#fff, .3))
+		border-radius: @border-radius
+		height: progress-height
+		position: absolute
 
-.widget
-	.progress
-		margin: 0 10px 0 0
-		background: linear-gradient(top, rgba(#fff, .15), rgba(#fff, .3))
-		width: 100px
-		position: relative
-		box-shadow: 0 -1px 0 #000, 0 1px 0 rgba(#fff, .4)
-		height: 5px
-		border-radius: 2px
-		display: inline-block
-		top: (height / 2) - (@height / 2)
-		.bar
-			height: @height
-			border-radius: @border-radius
-			background: linear-gradient(top, rgba(#fff, .7), rgba(#fff, .3))
-			position: absolute
-	&.popup
-		.popup-contents
-			overflow: hidden
-			max-width: 0
-			overflow: hidden
-			transition: all .2s ease
-			opacity: 0
-		&:hover .popup-contents,
-		.popup-contents:hover
-			opacity: 1
-			max-width: 200px
-	&#desktops
-		li
-			margin: 0 0 0 2px
-			padding: 0 8px
-			cursor: pointer
-			position: relative
-			height: height - 2px
-			line-height: height - 2px
-			top: 1px
-			text-align: center
-			color: rgba(#fff, .9)
-			background: linear-gradient(top, transparent 0%, transparent 50%, rgba(#fff, .7) 50%, rgba(#fff, .9)) 0 0
-			background-size: height (height * 2)
-			border-radius: 2px
-			&:hover
-				color: #fff
-			&.urgent
-				animation: urgent-pulse 1.5s linear infinite
-				color: #fff !important
-				font-weight: bold
-			&.has-windows
-				&::after
-					position: absolute
-					content: ''
-					width: 5px
-					height: 5px
-					top: 1px
-					right: 1px
-					background: linear-gradient(45deg, transparent, transparent 50%, rgba(#fff, .3) 50%)
-			&.selected
-				background-position: 0% (-(height))
-				color: rgba(#000, .9)
-				text-shadow: 0 1px 0 rgba(#fff, .7)
-				font-weight: bold
-				box-shadow: inset 0 -1px 1px rgba(#fff, 1), 0 1px 0 rgba(#000, .8)
-				&.has-windows
-					&::after
-						background: linear-gradient(45deg, transparent, transparent 50%, rgba(#000, .5) 50%)
-	&#window
-		max-width = 500px
-		max-width: max-width
+.popup
+	.popup-contents
+		max-width: 0
 		overflow: hidden
-		text-overflow: clip
-		-webkit-mask-image: -webkit-linear-gradient(left, rgba(#000, 1), rgba(#000, 1) max-width - 50px, rgba(#000, 0) max-width)
-	&#datetime
+		transition: all .3s linear
+	&:hover .popup-contents,
+	.popup-contents:hover
+		max-width: 600px
+
+// widgets
+.widget
+	*
+		vertical-align: top
+
+	&#widget_battery
+		.icon
+			font-size: font-size + 7px
+			margin-top: -1px
+		.percentage
+			margin: 0 0 0 padding-width
+		&.percentage-high .icon::before
+			content: '\e803'
+		&.percentage-medium .icon::before
+			content: '\e802'
+		&.percentage-low .icon::before
+			content: '\e801'
+		&.percentage-critical
+			animation: urgent-pulse 2s ease infinite
+			font-weight: bold
+			.icon::before
+				content: '\e800'
+		&.state-charging, &.state-discharging
+			.time_left
+				opacity: .8
+				margin: 0 0 0 padding-width
+				&:after
+					content: ' left'
+		&.state-charging
+			animation: none
+			.icon::before
+				content: '\e804'
+		&.state-full .icon::before
+			background-color: color-green
+
+	&#widget_datetime
 		.icon::before
 			content: '\e809'
 		.date
-			margin: 0 10px
-			color: rgba(#fff, .85)
+			margin: 0 padding-width
+			color: rgba(#fff, .8)
 		.time
 			font-weight: bold
-	&#notifications
-		margin: 0 10px 0 0 !important
+
+	&#widget_desktops
+		.contents
+			margin: 0 1px
 		li
-			height: height - 4px
-			cursor: pointer
-			line-height: height - 4px
-			text-align: center
-			margin: 2px 0 0 5px
-			animation: bubble 0.3s ease
-			padding: 0 7px
 			border-radius: 2px
-			i.icon
-				font-size: 20px
-				margin: 2px 0 0 0
-			&.error i
-				background: linear-gradient(top, lighten(error-col, 20), error-col)
-				-webkit-background-clip: text
-				-webkit-text-fill-color: transparent
-			&.warning i
-				background: linear-gradient(top, lighten(warning-col, 20), warning-col)
-				-webkit-background-clip: text
-				-webkit-text-fill-color: transparent
-			.content
-				max-width: 0
-				overflow: hidden
-				transition: max-width .2s
-				opacity: 0
-			&:hover
-				&.error i, &.warning i
-					background: linear-gradient(top, rgba(#fff, 1), rgba(#fff, .7))
-					-webkit-background-clip: text
-					-webkit-text-fill-color: transparent
-				box-shadow: inset 0 -1px 1px 0 rgba(#000, .2), inset 0 1px 1px 0 rgba(#fff, .2)
-				.content, .content *
-					display: inline-block
-				.content
-					text-align: left
-					opacity: 1
-					max-width: 300px
-					transition: max-width .8s, opacity .5s
-				&.error
-					background: linear-gradient(top, error-col, darken(error-col, 10))
-				&.warning
-					background: linear-gradient(top, warning-col, darken(warning-col, 10))
-				.icon
-					margin: 0 5px 0 0
-					font-size: 14px
-				.close
-					opacity: .5
-					margin: 0 0 0 5px
-				.summary
-					font-weight: bold
-				.body
-					margin: 0 0 0 5px
-	&#now_playing
+			cursor: pointer
+			height: height - (desktop-margin * 2)
+			line-height: height - (desktop-margin * 2)
+			margin: 0 1px
+			padding: 0 padding-width
+			position: relative
+			text-align: center
+			top: 1px
+			&.urgent
+				animation: urgent-pulse 1.5s linear infinite
+				font-weight: bold
+			&.has-windows
+				&::after
+					background: linear-gradient(45deg, transparent, transparent 50%, rgba(#fff, .3) 50%)
+					content: ''
+					height: 5px
+					position: absolute
+					right: 1px
+					top: 1px
+					width: 5px
+			&.selected
+				background: linear-gradient(top, rgba(color-foreground, .7), rgba(color-foreground, .9))
+				color: color-background
+				font-weight: bold
+				text-shadow: 0 1px 0 rgba(#fff, .8)
+				&.has-windows
+					&::after
+						background: linear-gradient(45deg, transparent, transparent 50%, rgba(#000, .5) 50%)
+
+	&#widget_external_ip
+		.icon::before
+			content: '\e80a'
+		.ip
+			-webkit-user-select: text
+			cursor: auto
+			margin: 0 0 0 padding-width
+
+	&#widget_now_playing
 		.icon::before
 			content: '\e810'
 		.status-icon
@@ -272,27 +225,30 @@ html, body
 				margin: 0 0 0 10px
 			.total_time
 				font-size: 10px
+				margin: 0 0 0 (padding-width / 2)
 				opacity: .8
+				vertical-align: middle
 				&:before
 					content: ' / '
 		.progress
-			margin: 0 10px
+			margin: 0 padding-width
 		.song
 			overflow: hidden
 			text-overflow: clip
 			.artist
-				margin: 0 0 0 10px
-				display: inline
+				display: inline-block
+				margin: 0 0 0 padding-width
 				opacity: .8
 				&::after
 					content: '›'
-					margin: 0 5px
+					margin: 0 padding-width
 					opacity: .6
 			.title
-				display: inline
-	&#volume
+				display: inline-block
+
+	&#widget_volume
 		.progress
-			margin: 0 0 0 10px
+			margin: 0 0 0 padding-width
 		.icon
 			&.high::before
 				content: '\e807'
@@ -301,51 +257,24 @@ html, body
 			&.low::before
 				content: '\e805'
 			&.off::before
+				color-mute = lighten(color-red, 20)
+				background: color-mute
 				content: '\e805'
-				background-color: error-col
-	&#weather
+				-webkit-background-clip: text
+
+	&#widget_weather
 		.icon
-			margin: 2px 0 0 0
-			height: height - 2px
+			img
+				display: inline-block
+				height: height - (desktop-margin * 2)
+				position: relative
+				top: desktop-margin
+				vertical-align: top
 		.temp
-			margin: 0 0 0 5px
+			margin: 0 0 0 padding-width
 			&.c::after
 				content: '\00b0 C'
 			&.f::after
 				content: '\00b0 F'
 			&.k::after
 				content: 'K'
-	&#external_ip
-		.icon::before
-			content: '\e80a'
-		.ip
-			margin: 0 0 0 10px
-			cursor: auto
-			-webkit-user-select: text
-	&#battery
-		.icon
-			font-size: 19px
-		.percentage
-			margin: 0 0 0 10px
-		.time_left
-			opacity: .8
-			margin: 0 0 0 10px
-			&:after
-				content: ' left'
-		&.percentage-high .icon::before
-			content: '\e803'
-		&.percentage-medium .icon::before
-			content: '\e802'
-		&.percentage-low .icon::before
-			content: '\e801'
-		&.percentage-critical
-			animation: urgent-pulse 2s ease infinite
-			font-weight: bold
-			.icon::before
-				content: '\e800'
-		&.state-charging
-			animation: none
-			.icon::before
-				content: '\e804'
-		&.state-full .icon::before
-			background-color: good-col
