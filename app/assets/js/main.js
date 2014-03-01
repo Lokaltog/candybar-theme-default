@@ -94,41 +94,26 @@ widget_datetime = function (config) {
 	}
 }
 
-widget_external_ip = function (config) {
-	this.config = mergeRecursive({
-	}, config)
-	this.container = $('#external_ip')
-	this.field = $('.ip', this.container),
-	this.data = {}
-	this.update = function (data) {
-		show(this.container)
-		this.field.textContent = data.ip
-	}
-}
-
 widget_desktops = function (config) {
 	this.config = mergeRecursive({
 	}, config)
-	this.containers = {
-		desktops: $('#desktops'),
-		window: $('#window'),
-	}
+	this.container = $('#desktops')
 	this.data = {}
 	this.update = function (data) {
-		show(this.containers.desktops, this.containers.window)
+		show(this.container)
 
 		// check if we need to replace all the desktop elements
 		if (this.data.desktopsLen !== data.desktops.length) {
 			this.data.desktopsLen = data.desktops.length
-			while (this.containers.desktops.firstChild) {
-				this.containers.desktops.removeChild(this.containers.desktops.firstChild)
+			while (this.container.firstChild) {
+				this.container.removeChild(this.container.firstChild)
 			}
 			for (var i = 0; i < data.desktops.length; i += 1) {
 				var desktopEl = document.createElement('li'),
 				    desktopName = (i + 1).toString()
 				desktopEl.textContent = desktopName
 				desktopEl.classList.add('desktop-' + desktopName, 'desktop')
-				this.containers.desktops.appendChild(desktopEl)
+				this.container.appendChild(desktopEl)
 			}
 		}
 
@@ -145,8 +130,18 @@ widget_desktops = function (config) {
 				desktopEl.classList.add('selected')
 			}
 		})
+	}
+}
 
-		this.containers.window.textContent = data.current_window
+widget_external_ip = function (config) {
+	this.config = mergeRecursive({
+	}, config)
+	this.container = $('#external_ip')
+	this.field = $('.ip', this.container),
+	this.data = {}
+	this.update = function (data) {
+		show(this.container)
+		this.field.textContent = data.ip
 	}
 }
 
@@ -258,6 +253,17 @@ widget_weather = function (config) {
 	}
 }
 
+widget_window_title = function (config) {
+	this.config = mergeRecursive({
+	}, config)
+	this.container = $('#window_title')
+	this.data = {}
+	this.update = function (data) {
+		show(this.container)
+		this.container.textContent = data.window_title
+	}
+}
+
 // TODO move this to the C files based on the #defines there
 widgets.register('battery')
 widgets.register('datetime')
@@ -266,3 +272,4 @@ widgets.register('external_ip')
 widgets.register('now_playing')
 widgets.register('volume')
 widgets.register('weather')
+widgets.register('window_title')
