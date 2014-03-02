@@ -72,8 +72,9 @@ widget_battery = function (config) {
 widget_datetime = function (config) {
 	var container, fields
 	config = mergeRecursive({
-		interval: 1000,
-		showSeconds: true,
+		update_interval: 1000,
+		date_format: 'YYYY-MM-DD',
+		time_format: 'HH:mm:ss',
 	}, config)
 	container = $('#widget_datetime .contents')
 	fields = {
@@ -82,23 +83,12 @@ widget_datetime = function (config) {
 	}
 	this.init = function () {
 		show(container)
-		setInterval(this.update.bind(this), config.interval)
+		setInterval(this.update.bind(this), config.update_interval)
 		this.update()
 	}
 	this.update = function () {
-		var now = new Date(),
-		    date = now.getFullYear() + '-' +
-			    pad(now.getMonth() + 1, 2) + '-' +
-			    pad(now.getDate(), 2),
-		    time = pad(now.getHours(), 2) + ':' +
-			    pad(now.getMinutes(), 2)
-
-		if (config.showSeconds) {
-			time += ':' +  pad(now.getSeconds(), 2)
-		}
-
-		fields.date.textContent = date
-		fields.time.textContent = time
+		fields.date.textContent = moment().format(config.date_format)
+		fields.time.textContent = moment().format(config.time_format)
 	}
 }
 
@@ -157,7 +147,7 @@ widget_external_ip = function (config) {
 widget_now_playing = function (config) {
 	var container, fields, elapsedUpdater, elapsedUpdaterCb
 	config = mergeRecursive({
-		interval: 1000,
+		update_interval: 1000,
 	}, config)
 	container = $('#widget_now_playing .contents')
 	fields = {
@@ -206,7 +196,7 @@ widget_now_playing = function (config) {
 
 		clearInterval(elapsedUpdater)
 		if (data.playing) {
-			elapsedUpdater = setInterval(elapsedUpdaterCb.bind(this), config.interval)
+			elapsedUpdater = setInterval(elapsedUpdaterCb.bind(this), config.update_interval)
 		}
 	}
 }

@@ -91,6 +91,7 @@ module.exports = function (grunt) {
 			all: {
 				files: {
 					'webroot/static/js/main.js': [
+						'app/assets/js/moment.min.js',
 						'app/assets/js/utils.js',
 						'app/assets/js/main.js',
 					],
