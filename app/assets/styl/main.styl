@@ -47,7 +47,10 @@ html, body
 	user-select: none
 
 #statusline-bg
-	background: color-background linear-gradient(top, rgba(lighten(color-background, background-gradient-amount), background-opacity), rgba(darken(color-background, background-gradient-amount), background-opacity))
+	background: color-background linear-gradient(top,
+		rgba(lighten(color-background, background-gradient-amount), background-opacity) 0,
+		rgba(darken(color-background, background-gradient-amount), background-opacity) 60%,
+		rgba(color-background, background-opacity) 100%)
 	box-sizing: border-box
 	height: height
 
