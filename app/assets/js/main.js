@@ -3,7 +3,7 @@ var widgets = new WidgetStorage(),
     widget_datetime,
     widget_desktops,
     widget_external_ip,
-    widget_now_playing,
+    widget_now_playing_mpd,
     widget_volume,
     widget_weather,
     widget_window_title
@@ -144,7 +144,7 @@ widget_external_ip = function (config) {
 	}
 }
 
-widget_now_playing = function (config) {
+widget_now_playing_mpd = function (config) {
 	var container, fields, elapsedUpdater, elapsedUpdaterCb
 	config = mergeRecursive({
 		update_interval: 1000,
@@ -278,7 +278,7 @@ widgets.register('battery')
 widgets.register('datetime')
 widgets.register('desktops')
 widgets.register('external_ip')
-widgets.register('now_playing')
+widgets.register('now_playing_mpd')
 widgets.register('volume')
 widgets.register('weather')
 widgets.register('window_title')
