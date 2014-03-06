@@ -1,7 +1,30 @@
 module.exports = function (grunt) {
-	var matchdep = require('matchdep')
+	var matchdep = require('matchdep'),
+	    jsFiles,
+	    stylFiles,
+	    jadeFiles
 
 	matchdep.filter('grunt-*').forEach(grunt.loadNpmTasks)
+
+	jsFiles = {
+		'webroot/static/js/main.js': [
+			'app/assets/js/moment.min.js',
+			'app/assets/js/utils.js',
+			'app/assets/js/main.js',
+		],
+	}
+	stylFiles = [{
+		'webroot/static/css/main.css': [
+			'app/assets/styl/main.styl',
+		],
+	}]
+	jadeFiles = [{
+		expand: true,
+		cwd: 'app/views',
+		src: '**/*.jade',
+		dest: 'webroot/',
+		ext: '.html',
+	}]
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
@@ -22,7 +45,22 @@ module.exports = function (grunt) {
 			},
 		},
 		stylus: {
-			all: {
+			development: {
+				files: stylFiles,
+				options: {
+					debug: true,
+					compress: false,
+					'include css': true,
+					use: [
+						require('nib'),
+					],
+					'import': [
+						'nib',
+					],
+				},
+			},
+			production: {
+				files: stylFiles,
 				options: {
 					debug: false,
 					compress: true,
@@ -34,29 +72,20 @@ module.exports = function (grunt) {
 						'nib',
 					],
 				},
-				files: [{
-					'webroot/static/css/main.css': [
-						'app/assets/styl/main.styl',
-					],
-				}],
 			},
 		},
 		jade: {
-			all: {
+			development: {
+				files: jadeFiles,
+				options: {
+					pretty: true,
+				},
+			},
+			production: {
+				files: jadeFiles,
 				options: {
 					pretty: false,
-					data: {
-						__min: '.min',
-						__debug: false,
-					},
 				},
-				files: [{
-					expand: true,
-					cwd: 'app/views',
-					src: '**/*.jade',
-					dest: 'webroot/',
-					ext: '.html',
-				}],
 			},
 		},
 		cssmin: {
@@ -88,13 +117,63 @@ module.exports = function (grunt) {
 			},
 		},
 		uglify: {
-			all: {
-				files: {
-					'webroot/static/js/main.js': [
-						'app/assets/js/moment.min.js',
-						'app/assets/js/utils.js',
-						'app/assets/js/main.js',
-					],
+			development: {
+				files: jsFiles,
+				options: {
+					compress: {
+						global_defs: {
+							DEBUG: true,
+						},
+					},
+					beautify: true,
+					mangle: false,
+					warnings: true,
+				},
+			},
+			production: {
+				files: jsFiles,
+				options: {
+					compress: {
+						drop_console: true,
+						unsafe: true,
+						global_defs: {
+							DEBUG: false,
+						},
+					},
+					beautify: false,
+					mangle: {
+						toplevel: false,
+					},
+					warnings: true,
+				},
+			},
+		},
+		watch: {
+			options: {
+				spawn: false,
+				atBegin: true,
+			},
+			sync: {
+				files: ['app/assets/{img,font,etc}/**'],
+				tasks: ['sync:all'],
+			},
+			uglify: {
+				files: ['app/assets/js/**/*.js'],
+				tasks: ['uglify:development'],
+			},
+			stylus: {
+				files: ['app/assets/styl/**/*.styl'],
+				tasks: ['stylus:development'],
+			},
+			jade: {
+				files: ['app/views/**/*.jade'],
+				tasks: ['jade:development'],
+			},
+			livereload: {
+				files: ['webroot/static/css/**/*.css'],
+				tasks: [],
+				options: {
+					livereload: true,
 				},
 			},
 		},
@@ -107,14 +186,17 @@ module.exports = function (grunt) {
 		},
 	})
 
-	grunt.registerTask('default', [
-		'clean',
-		'sync',
-		'stylus',
-		'jade',
-		'cssmin',
-		'htmlmin',
-		'uglify',
-		'smoosher',
+	grunt.registerTask('development', [
+		'watch',
+	])
+
+	grunt.registerTask('production', [
+		'clean:all',
+		'sync:all',
+		'stylus:production',
+		'jade:production',
+		'uglify:production',
+		'cssmin:all',
+		'htmlmin:all',
 	])
 }
