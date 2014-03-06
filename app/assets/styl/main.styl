@@ -5,7 +5,7 @@ reset-html5()
 font-main = sans-serif
 font-icons = wkline-icons
 font-size = 14px
-height = 26px
+height = 27px
 color-background = #111
 color-foreground = #fff
 background-opacity = .6
@@ -32,7 +32,7 @@ color-green = #7a3
 
 // core design
 @font-face
-	src: url('static/font/wkline-icons.svg') format('svg')
+	src: url('../font/wkline-icons.svg') format('svg')
 	font-family: font-icons
 	font-style: normal
 	font-weight: normal
@@ -51,18 +51,21 @@ html, body
 		rgba(lighten(color-background, background-gradient-amount), background-opacity) 0,
 		rgba(darken(color-background, background-gradient-amount), background-opacity) 60%,
 		rgba(color-background, background-opacity) 100%)
+	border-radius: (padding-width / 2) (padding-width / 2) 0 0
 	box-sizing: border-box
 	height: height
 
 #statusline
 	border-bottom: 1px solid rgba(#000, border-opacity + .5)
 	border-top: 1px solid rgba(#fff, border-opacity)
+	border-radius: (padding-width / 2) (padding-width / 2) 0 0
 	box-sizing: border-box
 	color: color-foreground
 	display: flex
 	flex-flow: row nowrap
 	height: height
 	position: relative
+	overflow: hidden
 	.widget
 		border-left: 1px solid rgba(#fff, border-opacity)
 		border-right: 1px solid rgba(#000, border-opacity + .5)
@@ -175,34 +178,34 @@ html, body
 
 	&#widget_desktops
 		.contents
-			margin: 0 1px
+			margin: 0
+			padding: 0
 		li
-			border-radius: 2px
 			cursor: pointer
-			height: height - (desktop-margin * 2)
-			line-height: height - (desktop-margin * 2)
-			margin: 0 1px
 			padding: 0 padding-width
 			position: relative
 			text-align: center
-			top: 1px
+			&:first-child
+				border-top-left-radius: (padding-width / 2) - 2px
 			&.urgent
 				animation: urgent-pulse 1.5s linear infinite
 				font-weight: bold
 			&.has-windows
 				&::after
 					background: linear-gradient(45deg, transparent, transparent 50%, rgba(#fff, .3) 50%)
+					border-top-right-radius: 1px
 					content: ''
 					height: 5px
 					position: absolute
-					right: 1px
-					top: 1px
+					right: 2px
+					top: 2px
 					width: 5px
 			&.selected
-				background: linear-gradient(top, rgba(color-foreground, .7), rgba(color-foreground, .9))
+				background: linear-gradient(top, rgba(color-foreground, .9), rgba(color-foreground, .7))
 				color: color-background
 				font-weight: bold
 				text-shadow: 0 1px 0 rgba(#fff, .8)
+				box-shadow: 0 -1px 2px #000
 				&.has-windows
 					&::after
 						background: linear-gradient(45deg, transparent, transparent 50%, rgba(#000, .5) 50%)
