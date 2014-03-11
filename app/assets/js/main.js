@@ -2,6 +2,7 @@ var widgets = new WidgetStorage(),
     widget_battery,
     widget_datetime,
     widget_desktops,
+    widget_email_imap,
     widget_external_ip,
     widget_now_playing_mpd,
     widget_volume,
@@ -123,6 +124,24 @@ widget_desktops = function (config) {
 				desktopEl.classList.add('selected')
 			}
 		})
+	}
+}
+
+widget_email_imap = function (config) {
+	var container = $('#widget_email_imap .contents')
+	var field = $('.unread', container)
+	config = mergeRecursive({
+	}, config)
+	this.update = function (data) {
+		show(container)
+
+		container.classList.remove('has-unread')
+		field.textContent = ''
+
+		if (data.unread > 0) {
+			container.classList.add('has-unread')
+			field.textContent = data.unread
+		}
 	}
 }
 
@@ -271,6 +290,7 @@ widget_window_title = function (config) {
 widgets.register('battery')
 widgets.register('datetime')
 widgets.register('desktops')
+widgets.register('email_imap')
 widgets.register('external_ip')
 widgets.register('now_playing_mpd')
 widgets.register('volume')

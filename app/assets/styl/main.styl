@@ -30,6 +30,26 @@ color-green = #7a3
 		background: darken(color-red, 20)
 		text-shadow: 0 0 10px color-red, 0 0 5px color-red, 0 0 5px color-red, 0 0 2px color-foreground
 
+wb-rotation = 30deg
+@keyframes wiggle-bubble
+	0%
+		transform: scale(1)
+	2%
+		transform: scale(1.1) rotate(wb-rotation)
+	4%
+		transform: scale(1.2) rotate(-(wb-rotation))
+	6%
+		transform: scale(1.3) rotate(wb-rotation)
+	8%
+		transform: scale(1.3) rotate(-(wb-rotation))
+	10%
+		transform: scale(1.2) rotate(wb-rotation)
+	12%
+		transform: scale(1.1) rotate(-(wb-rotation))
+
+	14%, 100%
+		transform: scale(1) rotate(0)
+
 // core design
 @font-face
 	src: url('../font/wkline-icons.svg') format('svg')
@@ -209,6 +229,20 @@ html, body
 				&.has-windows
 					&::after
 						background: linear-gradient(45deg, transparent, transparent 50%, rgba(#000, .5) 50%)
+
+	&#widget_email_imap
+		color-unread = lighten(color-red, 20)
+		.icon::before
+			content: '\e815'
+		.has-unread
+			.icon::before
+				animation: wiggle-bubble 7s linear infinite
+				background: color-unread
+				-webkit-background-clip: text
+			.unread
+				margin: 0 0 0 (padding-width / 2)
+				color: color-unread
+				font-weight: bold
 
 	&#widget_external_ip
 		.icon::before
