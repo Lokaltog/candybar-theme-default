@@ -142,7 +142,7 @@ html, body
 			font-size: font-size + 7px
 			margin-top: -1px
 		.percentage
-			margin: 0 0 0 padding-width
+			margin: 0 0 0 (padding-width / 2)
 		&.percentage-high .icon::before
 			content: '\e803'
 		&.percentage-medium .icon::before
@@ -157,7 +157,7 @@ html, body
 		&.state-charging, &.state-discharging
 			.time_left
 				opacity: .8
-				margin: 0 0 0 padding-width
+				margin: 0 0 0 (padding-width / 2)
 				&:after
 					content: ' left'
 		&.state-charging
@@ -171,7 +171,7 @@ html, body
 		.icon::before
 			content: '\e809'
 		.date
-			margin: 0 padding-width
+			margin: 0 padding-width 0 (padding-width / 2)
 			color: rgba(#fff, .8)
 		.time
 			font-weight: bold
@@ -216,7 +216,7 @@ html, body
 		.ip
 			-webkit-user-select: text
 			cursor: auto
-			margin: 0 0 0 padding-width
+			margin: 0 0 0 (padding-width / 2)
 
 	&#widget_now_playing
 		.icon::before
@@ -254,7 +254,7 @@ html, body
 
 	&#widget_volume
 		.progress
-			margin: 0 0 0 padding-width
+			margin: 0 0 0 (padding-width / 2)
 		.icon
 			&.high::before
 				content: '\e807'
@@ -277,7 +277,7 @@ html, body
 				top: desktop-margin
 				vertical-align: top
 		.temp
-			margin: 0 0 0 padding-width
+			margin: 0 0 0 (padding-width / 2)
 			&.c::after
 				content: '\00b0 C'
 			&.f::after
