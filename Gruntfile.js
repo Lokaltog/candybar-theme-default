@@ -8,7 +8,6 @@ module.exports = function (grunt) {
 
 	jsFiles = {
 		'webroot/static/js/main.js': [
-			'app/assets/js/moment.min.js',
 			'app/assets/js/utils.js',
 			'app/assets/js/main.js',
 		],

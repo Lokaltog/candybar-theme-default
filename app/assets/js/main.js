@@ -73,22 +73,16 @@ widget_datetime = function (config) {
 	var container, fields
 	config = mergeRecursive({
 		update_interval: 1000,
-		date_format: 'YYYY-MM-DD',
-		time_format: 'HH:mm:ss',
 	}, config)
 	container = $('#widget_datetime .contents')
 	fields = {
 		date: $('.date', container),
 		time: $('.time', container),
 	}
-	this.init = function () {
+	this.update = function (data) {
 		show(container)
-		setInterval(this.update.bind(this), config.update_interval)
-		this.update()
-	}
-	this.update = function () {
-		fields.date.textContent = moment().format(config.date_format)
-		fields.time.textContent = moment().format(config.time_format)
+		fields.date.textContent = data.date
+		fields.time.textContent = data.time
 	}
 }
 
