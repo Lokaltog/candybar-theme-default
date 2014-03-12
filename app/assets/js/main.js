@@ -4,6 +4,7 @@ var widgets = new WidgetStorage(),
     widget_desktops,
     widget_email_imap,
     widget_external_ip,
+    widget_magick_background,
     widget_now_playing_mpd,
     widget_volume,
     widget_weather,
@@ -157,6 +158,12 @@ widget_external_ip = function (config) {
 	}
 }
 
+widget_magick_background = function (config) {
+	this.update = function (data) {
+		$('#statusline-bg').style.background = '-webkit-linear-gradient(top,' + data.gradient_start + ',' + data.gradient_end + '), url(data:image/jpg;base64,' + data.image + ')'
+	}
+}
+
 widget_now_playing_mpd = function (config) {
 	var container, fields, elapsedUpdater, elapsedUpdaterCb
 	config = mergeRecursive({
@@ -292,6 +299,7 @@ widgets.register('datetime')
 widgets.register('desktops')
 widgets.register('email_imap')
 widgets.register('external_ip')
+widgets.register('magick_background')
 widgets.register('now_playing_mpd')
 widgets.register('volume')
 widgets.register('weather')
