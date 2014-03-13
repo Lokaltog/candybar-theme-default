@@ -104,10 +104,9 @@ widget_desktops = function (config) {
 				container.removeChild(container.firstChild)
 			}
 			for (var i = 0; i < data.desktops.length; i += 1) {
-				var desktopEl = document.createElement('li'),
-				    desktopName = (i + 1).toString()
-				desktopEl.textContent = desktopName
-				desktopEl.classList.add('desktop-' + desktopName, 'desktop')
+				var desktopEl = document.createElement('li')
+				desktopEl.textContent = data.desktops[i].name
+				desktopEl.classList.add('desktop-' + (i + 1), 'desktop')
 				container.appendChild(desktopEl)
 			}
 		}
