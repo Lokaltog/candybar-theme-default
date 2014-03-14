@@ -159,7 +159,11 @@ widget_external_ip = function (config) {
 
 widget_magick_background = function (config) {
 	this.update = function (data) {
-		$('#statusline-bg').style.background = '-webkit-linear-gradient(top,' + data.gradient_start + ',' + data.gradient_end + '), url(data:image/jpg;base64,' + data.image + ')'
+		var overlay = ''
+		if (data.gradient_overlay) {
+			overlay += '-webkit-linear-gradient(' + data.gradient_overlay + '),'
+		}
+		$('#statusline-bg').style.background = overlay + 'url(data:image/jpg;base64,' + data.image + ')'
 	}
 }
 
