@@ -6,7 +6,6 @@ var widgets = new WidgetStorage(),
     widget_external_ip,
     widget_magick_background,
     widget_now_playing_mpd,
-    widget_volume,
     widget_weather,
     widget_window_title
 
@@ -224,36 +223,6 @@ widget_now_playing_mpd = function (config) {
 	}
 }
 
-widget_volume = function (config) {
-	var container, fields
-	config = mergeRecursive({
-	}, config)
-	container = $('#widget_volume .contents')
-	fields = {
-		icon: $('.icon', container),
-		percent_bar: $('.bar.volume_percent', container),
-	}
-	this.update = function (data) {
-		show(container)
-
-		fields.percent_bar.style.width = data.percent + '%'
-
-		fields.icon.classList.remove('off', 'low', 'medium', 'high')
-		if (data.percent > 75) {
-			fields.icon.classList.add('high')
-		}
-		else if (data.percent > 30) {
-			fields.icon.classList.add('medium')
-		}
-		else if (data.percent > 0) {
-			fields.icon.classList.add('low')
-		}
-		else {
-			fields.icon.classList.add('off')
-		}
-	}
-}
-
 widget_weather = function (config) {
 	var container, fields
 	config = mergeRecursive({
@@ -304,6 +273,36 @@ widgets.register('email_imap')
 widgets.register('external_ip')
 widgets.register('magick_background')
 widgets.register('now_playing_mpd')
-widgets.register('volume')
 widgets.register('weather')
 widgets.register('window_title')
+
+var volumeContainer = $('#widget_volume .contents')
+var volumeFields = {
+	icon: $('.icon', volumeContainer),
+	percent_bar: $('.bar.volume_percent', volumeContainer),
+}
+VolumeWidget.onDataChanged = function (percentage, muted) {
+	show(volumeContainer)
+	volumeFields.icon.classList.remove('off', 'low', 'medium', 'high')
+	if (!muted) {
+		volumeFields.percent_bar.style.width = percentage + '%'
+		if (percentage > 75) {
+			volumeFields.icon.classList.add('high')
+		}
+		else if (percentage > 30) {
+			volumeFields.icon.classList.add('medium')
+		}
+		else if (percentage > 0) {
+			volumeFields.icon.classList.add('low')
+		}
+		else {
+			volumeFields.icon.classList.add('off')
+		}
+	}
+	else {
+		volumeFields.percent_bar.style.width = '0'
+		volumeFields.icon.classList.add('off')
+	}
+
+	volumeFields.percent_bar.offsetHeight // redraw
+}
