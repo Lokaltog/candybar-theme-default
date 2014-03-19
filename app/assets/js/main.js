@@ -1,17 +1,7 @@
-var widgets = new WidgetStorage(),
-    widget_battery,
-    widget_datetime,
-    widget_desktops,
-    widget_email_imap,
-    widget_external_ip,
-    widget_magick_background,
-    widget_now_playing_mpd,
-    widget_volume,
-    widget_weather,
-    widget_window_title
-
-widget_battery = function (config) {
-	var container, fields, stateClass = {
+registerCallback('battery', function (percentage, state, timeToEmpty, timeToFull) {
+	var container
+	var fields
+	var stateClass = {
 		0: 'unknown',
 		1: 'charging',
 		2: 'discharging',
@@ -20,290 +10,242 @@ widget_battery = function (config) {
 		5: 'charging', // charging pending
 		6: 'discharging', // discharging pending
 	}
-	config = mergeRecursive({
-	}, config)
-	container = $('#widget_battery')
-	fields = {
+	var container = $('#widget_battery')
+	var fields = {
 		icon: $('.contents .icon', container),
 		percentage: $('.contents .percentage', container),
 		time_left: $('.contents .time_left', container),
 	}
-	this.update = function (data) {
-		var sec, timeLeft = '', timeLeftHours, timeLeftMinutes, timeLeftSeconds
-		show($('.contents', container))
-		if (data.time_to_empty) {
-			sec = data.time_to_empty
-		}
-		if (data.time_to_full) {
-			sec = data.time_to_full
-		}
-		if (sec) {
-			timeLeftHours = parseInt(sec / 3600, 10) % 24
-			timeLeftMinutes = parseInt(sec  / 60, 10) % 60
-			timeLeftSeconds = parseInt(sec % 60, 10)
-			if (timeLeftHours) {
-				timeLeft += pad(timeLeftHours, 2) + ':'
-			}
-			if (timeLeftMinutes) {
-				timeLeft += pad(timeLeftMinutes, 2) + ':'
-			}
-			timeLeft += pad(timeLeftSeconds, 2)
-		}
 
-		container.classList.remove('state-unknown', 'state-charging', 'state-discharging', 'state-empty', 'state-full')
-		container.classList.add('state-' + stateClass[data.state])
-		container.classList.remove('percentage-critical', 'percentage-low', 'percentage-medium', 'percentage-high')
-		if (data.percentage >= 70) {
-			container.classList.add('percentage-high')
-		}
-		else if (data.percentage >= 40) {
-			container.classList.add('percentage-medium')
-		}
-		else if (data.percentage >= 5) {
-			container.classList.add('percentage-low')
-		}
-		else {
-			container.classList.add('percentage-critical')
-		}
+	var sec
+	var timeLeft = ''
+	var timeLeftHours
+	var timeLeftMinutes
+	var timeLeftSeconds
 
-		fields.percentage.textContent = Math.round(data.percentage) + '%'
-		fields.time_left.textContent = timeLeft
+	show($('.contents', container))
+	if (timeToEmpty) {
+		sec = data.timeToEmpty
 	}
-}
+	if (timeToFull) {
+		sec = timeToFull
+	}
+	if (sec) {
+		timeLeftHours = parseInt(sec / 3600, 10) % 24
+		timeLeftMinutes = parseInt(sec  / 60, 10) % 60
+		timeLeftSeconds = parseInt(sec % 60, 10)
+		if (timeLeftHours) {
+			timeLeft += pad(timeLeftHours, 2) + ':'
+		}
+		if (timeLeftMinutes) {
+			timeLeft += pad(timeLeftMinutes, 2) + ':'
+		}
+		timeLeft += pad(timeLeftSeconds, 2)
+	}
 
-widget_datetime = function (config) {
-	var container, fields
-	config = mergeRecursive({
-		update_interval: 1000,
-	}, config)
-	container = $('#widget_datetime .contents')
-	fields = {
+	container.classList.remove('state-unknown', 'state-charging', 'state-discharging', 'state-empty', 'state-full')
+	container.classList.add('state-' + stateClass[state])
+	container.classList.remove('percentage-critical', 'percentage-low', 'percentage-medium', 'percentage-high')
+	if (percentage >= 70) {
+		container.classList.add('percentage-high')
+	}
+	else if (percentage >= 40) {
+		container.classList.add('percentage-medium')
+	}
+	else if (percentage >= 5) {
+		container.classList.add('percentage-low')
+	}
+	else {
+		container.classList.add('percentage-critical')
+	}
+
+	fields.percentage.textContent = Math.round(percentage) + '%'
+	fields.time_left.textContent = timeLeft
+})
+
+registerCallback('datetime', function (date, time) {
+	var container = $('#widget_datetime .contents')
+	var fields = {
 		date: $('.date', container),
 		time: $('.time', container),
 	}
-	this.update = function (data) {
-		show(container)
-		fields.date.textContent = data.date
-		fields.time.textContent = data.time
-	}
-}
+	show(container)
+	fields.date.textContent = date
+	fields.time.textContent = time
+})
 
-widget_desktops = function (config) {
-	var container
-	config = mergeRecursive({
-	}, config)
-	container = $('#widget_desktops .contents')
+registerCallback('desktops', function (desktopObj) {
+	var data = JSON.parse(desktopObj)
+	var container = $('#widget_desktops .contents')
+	show(container)
+
 	this.data = {}
-	this.update = function (data) {
-		show(container)
 
-		// check if we need to replace all the desktop elements
-		if (this.data.desktopsLen !== data.desktops.length) {
-			this.data.desktopsLen = data.desktops.length
-			while (container.firstChild) {
-				container.removeChild(container.firstChild)
-			}
-			for (var i = 0; i < data.desktops.length; i += 1) {
-				var desktopEl = document.createElement('li')
-				desktopEl.textContent = data.desktops[i].name
-				desktopEl.classList.add('desktop-' + (i + 1), 'desktop')
-				container.appendChild(desktopEl)
-			}
+	// check if we need to replace all the desktop elements
+	if (this.data.desktopsLen !== data.desktops.length) {
+		this.data.desktopsLen = data.desktops.length
+		while (container.firstChild) {
+			container.removeChild(container.firstChild)
 		}
-
-		data.desktops.forEach(function (d, i) {
-			var desktopEl = $('.desktop-' + (i + 1))
-			desktopEl.classList.remove('selected', 'has-windows', 'urgent')
-			if (d.clients_len > 0) {
-				desktopEl.classList.add('has-windows')
-			}
-			if (d.is_urgent) {
-				desktopEl.classList.add('urgent')
-			}
-			if (i === data.current_desktop) {
-				desktopEl.classList.add('selected')
-			}
-		})
+		for (var i = 0; i < data.desktops.length; i += 1) {
+			var desktopEl = document.createElement('li')
+			desktopEl.textContent = data.desktops[i].name
+			desktopEl.classList.add('desktop-' + (i + 1), 'desktop')
+			container.appendChild(desktopEl)
+		}
 	}
-}
 
-widget_email_imap = function (config) {
+	data.desktops.forEach(function (d, i) {
+		var desktopEl = $('.desktop-' + (i + 1))
+		desktopEl.classList.remove('selected', 'has-windows', 'urgent')
+		if (d.clients_len > 0) {
+			desktopEl.classList.add('has-windows')
+		}
+		if (d.is_urgent) {
+			desktopEl.classList.add('urgent')
+		}
+		if (i === data.current_desktop) {
+			desktopEl.classList.add('selected')
+		}
+	})
+})
+
+registerCallback('email_imap', function (unread) {
 	var container = $('#widget_email_imap .contents')
 	var field = $('.unread', container)
-	config = mergeRecursive({
-	}, config)
-	this.update = function (data) {
-		show(container)
 
-		container.classList.remove('has-unread')
-		field.textContent = ''
+	show(container)
 
-		if (data.unread > 0) {
-			container.classList.add('has-unread')
-			field.textContent = data.unread
-		}
+	container.classList.remove('has-unread')
+	field.textContent = ''
+
+	if (unread > 0) {
+		container.classList.add('has-unread')
+		field.textContent = unread
 	}
-}
+})
 
-widget_external_ip = function (config) {
-	var container
-	config = mergeRecursive({
-	}, config)
-	container = $('#widget_external_ip .contents')
-	this.field = $('.ip', container),
-	this.update = function (data) {
-		show(container)
-		this.field.textContent = data.ip
+registerCallback('external_ip', function (ip) {
+	var container = $('#widget_external_ip .contents')
+	if (!ip) {
+		hide(container)
+		return
 	}
-}
+	show(container)
+	$('.ip', container).textContent = ip
+})
 
-widget_magick_background = function (config) {
-	this.update = function (data) {
-		var overlay = ''
-		if (data.gradient_overlay) {
-			overlay += '-webkit-linear-gradient(' + data.gradient_overlay + '),'
-		}
-		$('#statusline-bg').style.background = overlay + 'url(data:image/jpg;base64,' + data.image + ')'
+registerCallback('magick_background', function (img, cssOverlay) {
+	var overlay = ''
+	if (cssOverlay) {
+		overlay += '-webkit-linear-gradient(' + cssOverlay + '),'
 	}
-}
+	$('#statusline-bg').style.background = overlay + 'url(data:image/jpg;base64,' + img + ')'
+})
 
-widget_now_playing_mpd = function (config) {
-	var container, fields, elapsedUpdater, elapsedUpdaterCb
-	config = mergeRecursive({
-		update_interval: 1000,
-	}, config)
-	container = $('#widget_now_playing .contents')
-	fields = {
-		elapsed_time: $('.elapsed_time', container),
-		total_time: $('.total_time', container),
-		elapsed_percent_bar: $('.bar.elapsed_percent', container),
+var nowPlayingElapsedUpdater = null
+registerCallback('now_playing_mpd', function (title, artist, album, timeTotal, timeElapsed, playing) {
+	var container = $('#widget_now_playing .contents')
+	if (!artist || !title) {
+		hide(container)
+		return
+	}
+	var fields = {
+		elapsedTime: $('.elapsed_time', container),
+		totalTime: $('.total_time', container),
+		elapsedPercentBar: $('.bar.elapsed_percent', container),
 		artist: $('.artist', container),
 		title: $('.title', container),
-		status_icon: $('.status-icon', container),
+		statusIcon: $('.status-icon', container),
 	}
-	this.data = {}
-	elapsedUpdater = null
-	elapsedUpdaterCb = function () {
-		this.data.elapsed_sec += 1
-
-		var elapsedMinutes = Math.floor(this.data.elapsed_sec / 60),
-		    elapsedSeconds = this.data.elapsed_sec % 60
-
-		fields.elapsed_time.textContent = elapsedMinutes + ':' + pad(elapsedSeconds, 2)
-		fields.elapsed_percent_bar.style.width = (this.data.elapsed_sec / this.data.total_sec * 100) + '%'
-	}
-	this.update = function (data) {
-		if (! data.artist || ! data.title) {
-			hide(container)
-			return
+	var elapsedUpdaterCb = function (elapsed) {
+		if (!this.elapsed) {
+			this.elapsed = elapsed
 		}
-		this.data = data
-		show(container)
+		this.elapsed += 1
 
-		var elapsedMinutes = Math.floor(data.elapsed_sec / 60),
-		    elapsedSeconds = data.elapsed_sec % 60,
-		    totalMinutes = Math.floor(data.total_sec / 60),
-		    totalSeconds = data.total_sec % 60
+		var elapsedMinutes = Math.floor(this.elapsed / 60)
+		var elapsedSeconds = this.elapsed % 60
 
-		fields.elapsed_time.textContent = elapsedMinutes + ':' + pad(elapsedSeconds, 2)
-		fields.total_time.textContent = totalMinutes + ':' + pad(totalSeconds, 2)
-		fields.elapsed_percent_bar.style.width = (data.elapsed_sec / data.total_sec * 100) + '%'
-		fields.artist.textContent = data.artist
-		fields.title.textContent = data.title
-		if (data.playing) {
-			fields.status_icon.classList.add('playing')
+		fields.elapsedTime.textContent = elapsedMinutes + ':' + pad(elapsedSeconds, 2)
+		fields.elapsedPercentBar.style.width = (data.elapsedSec / data.totalSec * 100) + '%'
+	}
+
+	show(container)
+
+	var elapsedMinutes = Math.floor(timeElapsed / 60),
+	    elapsedSeconds = timeElapsed % 60,
+	    totalMinutes = Math.floor(timeTotal / 60),
+	    totalSeconds = timeTotal % 60
+
+	fields.elapsedTime.textContent = elapsedMinutes + ':' + pad(elapsedSeconds, 2)
+	fields.totalTime.textContent = totalMinutes + ':' + pad(totalSeconds, 2)
+	fields.elapsedPercentBar.style.width = (timeElapsed / timeTotal * 100) + '%'
+	fields.artist.textContent = artist
+	fields.title.textContent = title
+	if (playing) {
+		fields.statusIcon.classList.add('playing')
+	}
+	else {
+		fields.statusIcon.classList.remove('playing')
+	}
+
+	clearInterval(nowPlayingElapsedUpdater)
+	if (playing) {
+		nowPlayingElapsedUpdater = setInterval(elapsedUpdaterCb, 1000, timeElapsed)
+	}
+})
+
+registerCallback('volume', function (percentage, enabled, str) {
+	var volumeContainer = $('#widget_volume .contents')
+	var volumeFields = {
+		icon: $('.icon', volumeContainer),
+		percent_bar: $('.bar.volume_percent', volumeContainer),
+	}
+	show(volumeContainer)
+	volumeFields.icon.classList.remove('off', 'low', 'medium', 'high')
+	if (enabled) {
+		volumeFields.percent_bar.style.width = percentage + '%'
+		if (percentage > 75) {
+			volumeFields.icon.classList.add('high')
+		}
+		else if (percentage > 30) {
+			volumeFields.icon.classList.add('medium')
+		}
+		else if (percentage > 0) {
+			volumeFields.icon.classList.add('low')
 		}
 		else {
-			fields.status_icon.classList.remove('playing')
-		}
-
-		clearInterval(elapsedUpdater)
-		if (data.playing) {
-			elapsedUpdater = setInterval(elapsedUpdaterCb.bind(this), config.update_interval)
+			volumeFields.icon.classList.add('off')
 		}
 	}
-}
-
-widget_volume = function (config) {
-	var container, fields
-	config = mergeRecursive({
-	}, config)
-	container = $('#widget_volume .contents')
-	fields = {
-		icon: $('.icon', container),
-		percent_bar: $('.bar.volume_percent', container),
+	else {
+		volumeFields.percent_bar.style.width = '0'
+		volumeFields.icon.classList.add('off')
 	}
-	this.update = function (data) {
-		show(container)
+	volumeContainer.offsetHeight // redraw
+})
 
-		fields.percent_bar.style.width = data.percent + '%'
-
-		fields.icon.classList.remove('off', 'low', 'medium', 'high')
-		if (data.percent > 75) {
-			fields.icon.classList.add('high')
-		}
-		else if (data.percent > 30) {
-			fields.icon.classList.add('medium')
-		}
-		else if (data.percent > 0) {
-			fields.icon.classList.add('low')
-		}
-		else {
-			fields.icon.classList.add('off')
-		}
-	}
-}
-
-widget_weather = function (config) {
-	var container, fields
-	config = mergeRecursive({
-	}, config)
-	container = $('#widget_weather .contents')
-	fields = {
+registerCallback('weather', function (code, temp, unit) {
+	var container = $('#widget_weather .contents')
+	var fields = {
 		icon: $('.icon', container),
 		temp: $('.temp', container),
 	}
-	this.tempConversions = {
-		'c': function (temp) { return temp },
-		'f': function (temp) { return (temp * 9 / 5) + 32 },
-		'k': function (temp) { return temp + 273.15 },
+	var weatherIconEl = document.createElement('img')
+	show(container)
+	fields.temp.classList.remove('c', 'f', 'k')
+	while (fields.icon.firstChild) {
+		fields.icon.removeChild(fields.icon.firstChild)
 	}
-	this.update = function (data) {
-		var weatherIconEl = document.createElement('img')
-		show(container)
-		fields.temp.classList.remove('c', 'f', 'k')
+	weatherIconEl.src = 'static/img/weather/' + code + '.svg'
+	fields.icon.appendChild(weatherIconEl)
+	fields.temp.textContent = weatherTempConversions[unit.toLowerCase()](temp)
+	fields.temp.classList.add(unit)
+})
 
-		while (fields.icon.firstChild) {
-			fields.icon.removeChild(fields.icon.firstChild)
-		}
-
-		weatherIconEl.src = 'static/img/weather/' + data.icon + '.svg'
-		fields.icon.appendChild(weatherIconEl)
-		fields.temp.textContent = this.tempConversions[data.unit.toLowerCase()](data.temp)
-		fields.temp.classList.add(data.unit)
-	}
-}
-
-widget_window_title = function (config) {
-	var container
-	config = mergeRecursive({
-	}, config)
-	container = $('#widget_window_title .contents')
-	this.data = {}
-	this.update = function (data) {
-		show(container)
-		container.textContent = data.window_title
-	}
-}
-
-// TODO move this to the C files based on the #defines there
-widgets.register('battery')
-widgets.register('datetime')
-widgets.register('desktops')
-widgets.register('email_imap')
-widgets.register('external_ip')
-widgets.register('magick_background')
-widgets.register('now_playing_mpd')
-widgets.register('volume')
-widgets.register('weather')
-widgets.register('window_title')
+registerCallback('window_title', function (windowTitle) {
+	var container = $('#widget_window_title .contents')
+	show(container)
+	container.textContent = windowTitle
+})
