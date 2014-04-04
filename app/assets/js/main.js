@@ -192,7 +192,7 @@ registerCallback('now_playing_mpd', function (title, artist, album, timeTotal, t
 
 	clearInterval(nowPlayingElapsedUpdater)
 	if (playing) {
-		nowPlayingElapsedUpdater = setInterval(elapsedUpdaterCb, 1000, timeElapsed)
+		nowPlayingElapsedUpdater = setInterval(elapsedUpdaterCb.bind(elapsedUpdaterCb), 1000, timeElapsed)
 	}
 })
 
