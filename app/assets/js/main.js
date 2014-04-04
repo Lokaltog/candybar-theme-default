@@ -158,7 +158,7 @@ registerCallback('now_playing_mpd', function (title, artist, album, timeTotal, t
 		title: $('.title', container),
 		statusIcon: $('.status-icon', container),
 	}
-	var elapsedUpdaterCb = function (elapsed) {
+	var elapsedUpdaterCb = function (elapsed, timeTotal) {
 		if (!this.elapsed) {
 			this.elapsed = elapsed
 		}
@@ -168,7 +168,7 @@ registerCallback('now_playing_mpd', function (title, artist, album, timeTotal, t
 		var elapsedSeconds = this.elapsed % 60
 
 		fields.elapsedTime.textContent = elapsedMinutes + ':' + pad(elapsedSeconds, 2)
-		fields.elapsedPercentBar.style.width = (data.elapsedSec / data.totalSec * 100) + '%'
+		fields.elapsedPercentBar.style.width = (this.elapsed / timeTotal * 100) + '%'
 	}
 
 	show(container)
@@ -192,7 +192,7 @@ registerCallback('now_playing_mpd', function (title, artist, album, timeTotal, t
 
 	clearInterval(nowPlayingElapsedUpdater)
 	if (playing) {
-		nowPlayingElapsedUpdater = setInterval(elapsedUpdaterCb.bind(elapsedUpdaterCb), 1000, timeElapsed)
+		nowPlayingElapsedUpdater = setInterval(elapsedUpdaterCb.bind(elapsedUpdaterCb), 1000, timeElapsed, timeTotal)
 	}
 })
 
