@@ -30,8 +30,7 @@ module.exports = function (grunt) {
 
 		clean: {
 			all: [
-				'webroot/static',
-				'webroot/views',
+				'webroot/{static,views}',
 			],
 		},
 		sync: {
@@ -183,6 +182,16 @@ module.exports = function (grunt) {
 				},
 			},
 		},
+		imageEmbed: {
+			all: {
+				src: ['webroot/static/css/main.css'],
+				dest: 'webroot/static/css/main.css',
+				options: {
+					maxImageSize: 0,
+					baseDir: 'webroot',
+				},
+			},
+		},
 	})
 
 	grunt.registerTask('development', [
@@ -197,5 +206,8 @@ module.exports = function (grunt) {
 		'uglify:production',
 		'cssmin:all',
 		'htmlmin:all',
+		'imageEmbed:all',
+		'smoosher:all',
+		'clean:all',
 	])
 }

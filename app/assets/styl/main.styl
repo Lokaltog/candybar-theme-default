@@ -12,6 +12,7 @@ background-opacity = .6
 background-gradient-amount = 10
 border-opacity = .1
 padding-width = 10px
+icon-dim = 22px
 
 color-red = #d32
 color-yellow = #e92
@@ -51,7 +52,7 @@ wb-rotation = 30deg
 
 // core design
 @font-face
-	src: url('../font/wkline-icons.svg') format('svg')
+	src: url('/static/font/wkline-icons.svg') format('svg')
 	font-family: font-icons
 	font-style: normal
 	font-weight: normal
@@ -303,13 +304,15 @@ html, body
 				-webkit-background-clip: text
 
 	&#widget_weather
-		.icon
-			img
-				display: inline-block
-				height: height - 10vh
-				position: relative
-				top: 5vh
-				vertical-align: top
+		.w-icon
+			background-repeat: no-repeat
+			background-image: url('/static/img/weather-icons.png')
+			display: inline-block
+			height: icon-dim
+			position: relative
+			top: 5vh
+			vertical-align: top
+			width: icon-dim
 		.temp
 			margin: 0 0 0 (padding-width / 2)
 			&.c::after
@@ -318,3 +321,7 @@ html, body
 				content: '\00b0 F'
 			&.k::after
 				content: 'K'
+
+for num in (0..47)
+	.w-icon-{num}
+		background-position: -(num * icon-dim) 50%

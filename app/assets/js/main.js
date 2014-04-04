@@ -232,13 +232,13 @@ registerCallback('weather', function (code, temp, unit) {
 		icon: $('.icon', container),
 		temp: $('.temp', container),
 	}
-	var weatherIconEl = document.createElement('img')
+	var weatherIconEl = document.createElement('div')
 	show(container)
 	fields.temp.classList.remove('c', 'f', 'k')
 	while (fields.icon.firstChild) {
 		fields.icon.removeChild(fields.icon.firstChild)
 	}
-	weatherIconEl.src = 'static/img/weather/' + code + '.svg'
+	weatherIconEl.classList.add('w-icon', 'w-icon-' + code)
 	fields.icon.appendChild(weatherIconEl)
 	fields.temp.textContent = weatherTempConversions[unit.toLowerCase()](temp)
 	fields.temp.classList.add(unit)

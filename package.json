@@ -23,6 +23,7 @@
 		"grunt-contrib-uglify": "*",
 		"grunt-contrib-watch": "*",
 		"grunt-html-smoosher": "*",
+		"grunt-image-embed": "*",
 		"grunt-sync": "*",
 		"matchdep": "*"
 	},
