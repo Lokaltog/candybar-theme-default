@@ -74,6 +74,17 @@ registerCallback('datetime', function (date, time) {
 	fields.time.textContent = time
 })
 
+registerCallback('now_playing_mpris', function (artist, title) {
+	var container = $('#widget_mpris .contents')
+	var fields = {
+		artist: $('.artist', container),
+		title: $('.title', container),
+	}
+	show(container)
+	fields.artist.textContent = artist
+	fields.title.textContent = title
+})
+
 registerCallback('desktops', function (desktopObj) {
 	var data = JSON.parse(desktopObj)
 	var container = $('#widget_desktops .contents')
