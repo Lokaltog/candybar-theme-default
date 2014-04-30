@@ -140,7 +140,7 @@ registerCallback('magick_background', function (img, cssOverlay) {
 	if (cssOverlay) {
 		overlay += '-webkit-linear-gradient(' + cssOverlay + '),'
 	}
-	$('#statusline-bg').style.background = overlay + 'url(data:image/jpg;base64,' + img + ')'
+	$('#candybar-bg').style.background = overlay + 'url(data:image/jpg;base64,' + img + ')'
 })
 
 var nowPlayingElapsedUpdater = null
