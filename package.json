@@ -1,12 +1,12 @@
 {
-	"name": "wkline-theme-default",
+	"name": "candybar-theme-default",
 	"version": "0.0.1a1",
 	"private": true,
 	"author": "Kim Silkebækken <kim.silkebaekken@gmail.com>",
-	"description": "WebKit-based status line for tiling window managers.",
+	"description": "WebKit-based status bar for tiling window managers",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Lokaltog/wkline-theme-default"
+		"url": "https://github.com/Lokaltog/candybar-theme-default"
 	},
 	"dependencies" : {
 		"jade": "*",

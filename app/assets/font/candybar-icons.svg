@@ -3,8 +3,8 @@
 <svg xmlns="http://www.w3.org/2000/svg">
 <metadata>Copyright (C) 2014 by original authors @ fontello.com</metadata>
 <defs>
-<font id="wkline-icons" horiz-adv-x="1000" >
-<font-face font-family="wkline-icons" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
+<font id="candybar-icons" horiz-adv-x="1000" >
+<font-face font-family="candybar-icons" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
 <missing-glyph horiz-adv-x="1000" />
 <glyph glyph-name="music" unicode="&#xe810;" d="m857 725v-625q0-28-19-50t-48-33t-58-18t-53-6t-54 6t-58 18t-48 33t-19 50t19 50t48 33t58 18t54 6q58 0 107-22v300l-429-132v-396q0-28-19-50t-48-33t-58-18t-53-6t-54 6t-58 18t-48 33t-19 50t19 50t48 34t58 17t54 6q58 0 107-21v539q0 17 10 32t28 19l464 143q7 3 16 3q22 0 38-16t15-38z" horiz-adv-x="857.1" />
 <glyph glyph-name="email" unicode="&#xe815;" d="m0 62l0 576q0 1 3 19l339-290l-338-325q-4 14-4 20z m45 635q7 3 17 3l913 0q9 0 18-3l-340-291l-45-36l-89-73l-89 73l-45 36z m1-694l341 327l132-107l132 107l341-327q-8-3-17-3l-913 0q-8 0-16 3z m650 364l338 290q3-9 3-19l0-576q0-9-3-20z" horiz-adv-x="1037" />
