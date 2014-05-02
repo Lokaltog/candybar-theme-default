@@ -75,6 +75,10 @@ registerCallback('datetime', function (date, time) {
 })
 
 registerCallback('now_playing_mpris', function (artist, title) {
+	if (!artist || !title) {
+		hide(container)
+		return
+	}
 	var container = $('#widget_mpris .contents')
 	var fields = {
 		artist: $('.artist', container),
