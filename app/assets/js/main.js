@@ -83,11 +83,20 @@ registerCallback('now_playing_mpris', function (artist, title) {
 	var fields = {
 		artist: $('.artist', container),
 		title: $('.title', container),
+		toggle: $('.toggle', container),
+		previous: $('.previous', container),
+		next: $('.next', container),
 	}
 	show(container)
-	container.onclick = function (e) {widget_now_playing_mpris.toggle();}
+	fields.toggle.onclick = function (e) {widget_now_playing_mpris.toggle();}
+	fields.previous.onclick = function (e) {widget_now_playing_mpris.previous();}
+	fields.next.onclick = function (e) {widget_now_playing_mpris.next();}
+
 	fields.artist.textContent = artist
 	fields.title.textContent = title
+	fields.toggle.textContent = "toggle"
+	fields.previous.textContent = "previous"
+	fields.next.textContent = "next"
 })
 
 registerCallback('desktops', function (desktopObj) {
