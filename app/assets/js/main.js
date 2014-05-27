@@ -85,6 +85,7 @@ registerCallback('now_playing_mpris', function (artist, title) {
 		title: $('.title', container),
 	}
 	show(container)
+	container.onclick = function (e) {widget_now_playing_mpris.toggle();}
 	fields.artist.textContent = artist
 	fields.title.textContent = title
 })
