@@ -83,13 +83,13 @@ registerCallback('now_playing_mpris', function (artist, title) {
 	var fields = {
 		artist: $('.artist', container),
 		title: $('.title', container),
-		toggle: $('.toggle', container),
 		previous: $('.previous', container),
+		toggle: $('.toggle', container),
 		next: $('.next', container),
 	}
 	show(container)
-	fields.toggle.onclick = function (e) {widget_now_playing_mpris.toggle();}
 	fields.previous.onclick = function (e) {widget_now_playing_mpris.previous();}
+	fields.toggle.onclick = function (e) {widget_now_playing_mpris.toggle();}
 	fields.next.onclick = function (e) {widget_now_playing_mpris.next();}
 
 	fields.artist.textContent = artist
