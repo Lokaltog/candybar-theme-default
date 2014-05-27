@@ -94,9 +94,6 @@ registerCallback('now_playing_mpris', function (artist, title) {
 
 	fields.artist.textContent = artist
 	fields.title.textContent = title
-	fields.toggle.textContent = "toggle"
-	fields.previous.textContent = "previous"
-	fields.next.textContent = "next"
 })
 
 registerCallback('desktops', function (desktopObj) {

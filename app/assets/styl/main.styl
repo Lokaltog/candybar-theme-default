@@ -193,8 +193,14 @@ html, body
 			font-weight: bold
 		.title::before
 			content: ' - '
-		.button
-			padding: 0 padding-width 0 (padding-width / 2)
+		.icon
+			margin: 0 10px
+		.toggle.icon::before
+			content: '\e80b'
+		.previous.icon::before
+			content: '\e80f'
+		.next.icon::before
+			content: '\e80e'
 
 	&#widget_datetime
 		.icon::before
