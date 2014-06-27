@@ -83,10 +83,30 @@ registerCallback('now_playing_mpris', function (artist, title) {
 	var fields = {
 		artist: $('.artist', container),
 		title: $('.title', container),
+		previous: $('.previous', container),
+		toggle: $('.toggle', container),
+		next: $('.next', container),
 	}
 	show(container)
+	fields.previous.onclick = function (e) {widget_now_playing_mpris.previous();}
+	fields.next.onclick = function (e) {widget_now_playing_mpris.next();}
+	fields.toggle.onclick = function (e) {
+		widget_now_playing_mpris.toggle()
+
+		if (fields.toggle.classList.contains('play')) {
+			fields.toggle.classList.remove('play')
+			fields.toggle.classList.add('pause')
+		}
+		else if (fields.toggle.classList.contains('pause')) {
+			fields.toggle.classList.remove('pause')
+			fields.toggle.classList.add('play')
+		}
+	}
+
 	fields.artist.textContent = artist
 	fields.title.textContent = title
+	fields.toggle.classList.remove('play')
+	fields.toggle.classList.add('pause')
 })
 
 registerCallback('desktops', function (desktopObj) {
