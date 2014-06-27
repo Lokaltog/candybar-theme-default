@@ -90,23 +90,19 @@ registerCallback('now_playing_mpris', function (artist, title) {
 	show(container)
 	fields.previous.onclick = function (e) {widget_now_playing_mpris.previous();}
 	fields.next.onclick = function (e) {widget_now_playing_mpris.next();}
-	fields.toggle.onclick = function (e) {
-		widget_now_playing_mpris.toggle()
-
-		if (fields.toggle.classList.contains('play')) {
-			fields.toggle.classList.remove('play')
-			fields.toggle.classList.add('pause')
-		}
-		else if (fields.toggle.classList.contains('pause')) {
-			fields.toggle.classList.remove('pause')
-			fields.toggle.classList.add('play')
-		}
-	}
+	fields.toggle.onclick = function (e) {widget_now_playing_mpris.toggle();}
 
 	fields.artist.textContent = artist
 	fields.title.textContent = title
-	fields.toggle.classList.remove('play')
-	fields.toggle.classList.add('pause')
+
+	if (widget_now_playing_mpris.status() == 0) {
+		fields.toggle.classList.remove('play')
+		fields.toggle.classList.add('pause')
+	}
+	else {
+		fields.toggle.classList.remove('pause')
+		fields.toggle.classList.add('play')
+	}
 })
 
 registerCallback('desktops', function (desktopObj) {
@@ -209,9 +205,9 @@ registerCallback('now_playing_mpd', function (title, artist, album, timeTotal, t
 	show(container)
 
 	var elapsedMinutes = Math.floor(timeElapsed / 60),
-	    elapsedSeconds = timeElapsed % 60,
-	    totalMinutes = Math.floor(timeTotal / 60),
-	    totalSeconds = timeTotal % 60
+		elapsedSeconds = timeElapsed % 60,
+		totalMinutes = Math.floor(timeTotal / 60),
+		totalSeconds = timeTotal % 60
 
 	fields.elapsedTime.textContent = elapsedMinutes + ':' + pad(elapsedSeconds, 2)
 	fields.totalTime.textContent = totalMinutes + ':' + pad(totalSeconds, 2)
