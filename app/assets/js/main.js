@@ -79,6 +79,7 @@ registerCallback('now_playing_mpris', function (artist, title) {
 		hide(container)
 		return
 	}
+
 	var container = $('#widget_mpris .contents')
 	var fields = {
 		artist: $('.artist', container),
@@ -103,6 +104,10 @@ registerCallback('now_playing_mpris', function (artist, title) {
 		fields.toggle.classList.remove('pause')
 		fields.toggle.classList.add('play')
 	}
+
+    if (artist == "hide" && title == "hide") {
+        hide(container)
+    }
 })
 
 registerCallback('desktops', function (desktopObj) {
