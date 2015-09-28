@@ -175,11 +175,9 @@ module.exports = function (grunt) {
 				},
 			},
 		},
-		smoosher: {
-			all: {
-				files: {
-					'webroot/index.html': 'webroot/index.html',
-				},
+		inline: {
+			production: {
+				src: 'webroot/index.html',
 			},
 		},
 		imageEmbed: {
@@ -206,8 +204,7 @@ module.exports = function (grunt) {
 		'uglify:production',
 		'cssmin:all',
 		'htmlmin:all',
+		'inline:production',
 		'imageEmbed:all',
-		'smoosher:all',
-		'clean:all',
 	])
 }

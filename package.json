@@ -22,7 +22,7 @@
 		"grunt-contrib-stylus": "*",
 		"grunt-contrib-uglify": "*",
 		"grunt-contrib-watch": "*",
-		"grunt-html-smoosher": "*",
+		"grunt-inline": "*",
 		"grunt-image-embed": "*",
 		"grunt-sync": "*",
 		"matchdep": "*"
