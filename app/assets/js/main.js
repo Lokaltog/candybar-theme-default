@@ -146,7 +146,22 @@ registerCallback('desktops', function (desktopObj) {
 })
 
 registerCallback('email_imap', function (unread) {
-	var container = $('#widget_email_imap .contents')
+	var container = $('#widget_email .contents')
+	var field = $('.unread', container)
+
+	show(container)
+
+	container.classList.remove('has-unread')
+	field.textContent = ''
+
+	if (unread > 0) {
+		container.classList.add('has-unread')
+		field.textContent = unread
+	}
+})
+
+registerCallback('email_cmd', function (unread) {
+	var container = $('#widget_email .contents')
 	var field = $('.unread', container)
 
 	show(container)
